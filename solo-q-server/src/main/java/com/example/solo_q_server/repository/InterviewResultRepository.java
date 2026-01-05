@@ -9,9 +9,15 @@ import java.time.LocalDateTime;
 
 public interface InterviewResultRepository extends JpaRepository<InterviewResult, Long> {
 
-    // 사용자의 총 연습 횟수 조회
-    long countByMemberId(Long memberId);
+    // member.memberId 필드를 명확하게 지정하여 count 수행
+    @Query("SELECT COUNT(i) FROM InterviewResult i WHERE i.member.memberId = :memberId")
+    long countByMemberId(@Param("memberId") Long memberId);
 
-    // 이번 주(특정 기간) 연습 횟수 조회
-    long countByMemberIdAndCreatedAtBetween(Long memberId, LocalDateTime start, LocalDateTime end);
+    // 기간 조회 쿼리에서도 member.memberId를 명시적으로 지정
+    @Query("SELECT COUNT(i) FROM InterviewResult i WHERE i.member.memberId = :memberId AND i.createdAt BETWEEN :start AND :end")
+    long countByMemberIdAndCreatedAtBetween(
+            @Param("memberId") Long memberId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
