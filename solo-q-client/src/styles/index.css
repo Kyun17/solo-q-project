@@ -1,23 +1,28 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
-:root {
-    --bg: #020617;
-    --primary: #b668ff;
-    --primary-dark: #5b2cff;
-    --secondary: #a3e635;
-    --text: #ffffff;
-    --muted: #94a3b8;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-    box-sizing: border-box;
-}
 
 body {
-    margin: 0;
-    background: radial-gradient(circle at top left,
-            #5b2cff,
-            #020617 60%);
-    font-family: "Pretendard", sans-serif;
-    color: var(--text);
+    @apply bg-background text-white font-sans antialiased selection:bg-primary selection:text-white;
+}
+
+/* 스크롤바 커스텀 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
