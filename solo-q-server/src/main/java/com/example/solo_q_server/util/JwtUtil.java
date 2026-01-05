@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -27,7 +27,9 @@ public class JwtUtil {
     // 객체 생성 후 키 초기화
     @PostConstruct
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        // 🔥 수정된 부분: Base64 Decode를 하지 않고, 문자열을 바로 바이트로 변환합니다.
+        // 이렇게 하면 application.properties에 적은 영어 문장을 그대로 키로 쓸 수 있습니다.
+        byte[] bytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.key = Keys.hmacShaKeyFor(bytes);
     }
 
