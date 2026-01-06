@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
+    // ✅ 내 질문 목록 검색(카테고리/키워드/태그)
     @Query("""
         select q
         from Question q
@@ -30,4 +33,12 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             @Param("tag") String tag,
             Pageable pageable
     );
+
+    // ✅ Oracle DB에서 랜덤 질문 1개 가져오기 (nativeQuery)
+    // ⚠️ 테이블명이 실제로 QUESTION이면 아래처럼 대문자로 두는 게 안전
+    @Query(value = "SELECT * FROM (SELECT * FROM QUESTION ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 1", nativeQuery = true)
+    Optional<Question> findRandomQuestion();
+
+    // ✅ 특정 멤버의 질문 개수 조회
+    long countByMember_MemberId(Long memberId);
 }

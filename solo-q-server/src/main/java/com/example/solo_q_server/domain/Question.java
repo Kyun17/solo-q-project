@@ -1,34 +1,47 @@
 package com.example.solo_q_server.domain;
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "question")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "QUESTION")
 public class Question {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long questionId;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
-    private Long questionId;
+// 연관 관계 매핑 (Member N:1)
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "member_id", nullable = false)
+private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_question_member"))
-    private Member member;
+@Column(nullable = false)
+private String category; // 기술, 인성, CS 등
 
-    @Column(nullable = false, length = 20)
-    private String category; // 인성/기술/CS
+@Column(nullable = false, columnDefinition = "CLOB") // 오라클 CLOB 타입 매핑
+private String content;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+@Column(columnDefinition = "CLOB")
+private String answer;
 
-    @Column(columnDefinition = "TEXT")
-    private String answer;
+private String tags; // "Java,Spring" 처럼 콤마로 구분
 
-    @Column(length = 255)
-    private String tags; // "java,sql,cs" 등
+@CreationTimestamp
+private LocalDateTime createdAt;
 
-    protected Question() {}
-
+@UpdateTimestamp
+private LocalDateTime updatedAt;
+    // ✅ 서비스에서 쓰는 “필수 값만 받는 생성자” 추가
     public Question(Member member, String category, String content, String answer, String tags) {
         this.member = member;
         this.category = category;
@@ -37,13 +50,7 @@ public class Question {
         this.tags = tags;
     }
 
-    public Long getQuestionId() { return questionId; }
-    public Member getMember() { return member; }
-    public String getCategory() { return category; }
-    public String getContent() { return content; }
-    public String getAnswer() { return answer; }
-    public String getTags() { return tags; }
-
+    // ✅ 수정 로직(QuestionService에서 q.update(...) 쓰고 있으니 필요)
     public void update(String category, String content, String answer, String tags) {
         this.category = category;
         this.content = content;
