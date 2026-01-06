@@ -2,7 +2,12 @@ import React from 'react';
 import { Video, BookOpen, Users, ArrowRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const QuickMenuGrid = () => {
+const QuickMenuGrid = ({ data }) => {
+
+    // 데이터가 없을 경우 기본값 0
+    const questionCount = data ? data.questionCount : 0;
+
+
     return (
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-6 mb-10">
             {/* Card 1: Interview */}
@@ -28,7 +33,9 @@ const QuickMenuGrid = () => {
                         <BookOpen size={24} />
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2">내 질문 노트</h3>
-                    <p className="text-slate-400 text-sm">등록된 질문 <span className="text-white font-bold">12</span>개</p>
+                    <p className="text-slate-400 text-sm">
+                        등록된 질문 <span className="text-white font-bold">{questionCount}</span>개
+                    </p>
                     <div className="mt-3 flex gap-1 h-1.5 rounded-full overflow-hidden bg-slate-700/50">
                         <div className="w-2/3 bg-cyan-500"></div>
                         <div className="w-1/3 bg-transparent"></div>
