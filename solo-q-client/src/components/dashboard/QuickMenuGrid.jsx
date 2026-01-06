@@ -7,7 +7,6 @@ const QuickMenuGrid = ({ data }) => {
     // 데이터가 없을 경우 기본값 0
     const questionCount = data ? data.questionCount : 0;
 
-
     return (
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-6 mb-10">
             {/* Card 1: Interview */}
