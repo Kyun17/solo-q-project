@@ -19,7 +19,9 @@ public class DashboardController {
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard(HttpServletRequest request) {
         // 인터셉터에서 검증 후 넣어준 memberId 꺼내기
-        Long memberId = (Long) request.getAttribute("memberId");
+        // Long memberId = (Long) request.getAttribute("memberId");
+
+        Long memberId = 1L;
 
         // 개발 중 로그인 없이 테스트할 때를 위한 안전장치 (나중엔 삭제 가능)
         if (memberId == null) memberId = 1L;

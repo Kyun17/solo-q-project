@@ -38,6 +38,9 @@ public class DashboardService {
         // 4. 오늘의 추천 질문 (랜덤) 조회
         Question randomQ = questionRepository.findRandomQuestion().orElse(null);
 
+        // ✅ 추가: 내 질문 개수 조회
+        long myQuestionCount = questionRepository.countByMember_MemberId(memberId);
+
         DashboardResponse.TodayQuestionDto questionDto = null;
         if (randomQ != null) {
             questionDto = DashboardResponse.TodayQuestionDto.builder()
@@ -57,6 +60,7 @@ public class DashboardService {
                 .currentExp(currentExp)   // 현재 경험치 (예: 2)
                 .maxExp(levelUpUnit)      // 목표 경험치 (예: 5)
                 .todayQuestion(questionDto)
+                .questionCount(myQuestionCount)
                 .build();
     }
 }
