@@ -79,7 +79,7 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(404, "질문이 존재하지 않습니다."));
 
         // ✅ getMemberId() -> getId()
-        if (!q.getMember().getId().equals(memberId)) {
+        if (!q.getMember().getMemberId().equals(memberId)) {
             throw new CustomException(403, "내 질문만 조회할 수 있습니다.");
         }
         return toDetail(q);
@@ -93,7 +93,7 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(404, "질문이 존재하지 않습니다."));
 
         // ✅ getMemberId() -> getId()
-        if (!q.getMember().getId().equals(memberId)) {
+        if (!q.getMember().getMemberId().equals(memberId)) {
             throw new CustomException(403, "내 질문만 수정할 수 있습니다.");
         }
 
@@ -112,7 +112,7 @@ public class QuestionService {
                 .orElseThrow(() -> new CustomException(404, "질문이 존재하지 않습니다."));
 
         // ✅ getMemberId() -> getId()
-        if (!q.getMember().getId().equals(memberId)) {
+        if (!q.getMember().getMemberId().equals(memberId)) {
             throw new CustomException(403, "내 질문만 삭제할 수 있습니다.");
         }
 
