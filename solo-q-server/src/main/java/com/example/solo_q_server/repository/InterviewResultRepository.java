@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface InterviewResultRepository extends JpaRepository<InterviewResult, Long> {
 
@@ -20,4 +21,7 @@ public interface InterviewResultRepository extends JpaRepository<InterviewResult
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    // ✅ 3. [추가] 내 연습 기록 전체 조회 (최신순)
+    List<InterviewResult> findAllByMember_MemberIdOrderByCreatedAtDesc(Long memberId);
 }

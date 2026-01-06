@@ -26,15 +26,14 @@ public class WebConfig implements WebMvcConfigurer {
     // 2. 인터셉터 등록
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 🔥 개발 중에는 아래 주석을 풀지 마세요! (로그인 없이 API 테스트하기 위해)
-        /*
         registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**") // 모든 경로 검사
                 .excludePathPatterns(   // 검사 제외할 경로 (로그인 안 해도 되는 곳)
-                        "/api/auth/**", // 로그인, 회원가입
+                        "/api/auth/**", // 로그인, 회원가입은 통과
+                        "/api/health",  // 헬스 체크
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/error"
                 );
-        */
     }
 }
