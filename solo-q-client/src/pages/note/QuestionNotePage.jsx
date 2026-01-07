@@ -5,6 +5,7 @@ import CategoryFilter from "../../components/question/CategoryFilter";
 import QuestionList from "../../components/question/QuestionList";
 import QuestionFormModal from "../../components/question/QuestionFormModal";
 import QuestionHeader from "../../components/common/QuestionHeader";
+import Navbar from "../../components/common/Navbar";
 
 const CATEGORIES = ["ALL", "인성", "기술", "CS", "협업", "기타"];
 
@@ -92,8 +93,8 @@ export default function QuestionNotePage() {
 
   return (
     <>
-      <QuestionHeader />
-      <div className="min-h-screen text-zinc-100">
+      <Navbar />
+      <div className="pt-24 min-h-screen text-zinc-100">
         {/* Background */}
         <div className="fixed inset-0 -z-10 bg-[#070A14]" />
         <div className="fixed inset-0 -z-10 bg-[radial-gradient(900px_circle_at_20%_0%,rgba(124,58,237,0.22),transparent_55%),radial-gradient(900px_circle_at_90%_10%,rgba(34,211,238,0.14),transparent_55%),radial-gradient(700px_circle_at_50%_120%,rgba(16,185,129,0.12),transparent_50%)]" />
