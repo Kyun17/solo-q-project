@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import Navbar from '../../components/common/Navbar';
 import { fetchPosts } from '../../api/communityApi';
 
 import PostList from '../../components/community/PostList';
@@ -38,7 +39,7 @@ function CommunityPage() {
 
 
     // 🔹 임시 로그인 상태
-    const isLoggedIn = true;
+    const isLoggedIn = !!localStorage.getItem('token');
 
     // 🔹 서버 page는 0부터
     const page = uiPage - 1;
@@ -87,135 +88,149 @@ function CommunityPage() {
 
 
     return (
-        <div className="max-w-[1280px] mx-auto px-4 py-8">
+        <div className="min-h-screen pb-20 bg-slate-950 text-white">
+            {/* ✅ 상단 네비게이션 */}
+            <Navbar />
 
-            {/* 🔹 상단 헤더 */}
-            <h1 className="text-2xl font-bold text-white">커뮤니티</h1>
+            {/* ✅ 컨텐츠 영역 (Navbar 높이만큼 패딩) */}
+            <div className="pt-24">
+                <div className="max-w-[1280px] mx-auto px-4 py-8">
 
-            <div className="flex justify-between items-center mb-6">
+                    {/* 🔹 상단 헤더 */}
+                    <h1 className="text-2xl font-bold">커뮤니티</h1>
 
-                <h6>혼자 준비하기 막막하셨나요?
-                    다른 취준생들과 답변을 공유하고, 함께 성장할 스터디원을 찾아보세요.
-                </h6>
+                    <div className="flex justify-between items-center mb-6">
+                        <h6 className="text-slate-300">
+                            혼자 준비하기 막막하셨나요?
+                            다른 취준생들과 답변을 공유하고, 함께 성장할 스터디원을 찾아보세요.
+                        </h6>
 
-                {isLoggedIn && (
-                    <Button onClick={() => setIsWriteOpen(true)}>
-                        글쓰기
-                    </Button>
-                )}
-            </div>
+                        {isLoggedIn && (
+                            <Button onClick={() => setIsWriteOpen(true)}>
+                                글쓰기
+                            </Button>
+                        )}
+                    </div>
 
+                    {/* 🔹 탭 + 검색 */}
+                    <div className="flex items-center justify-between gap-6 mb-6">
+                        <div className="flex gap-2">
+                            {['ALL', 'FEEDBACK', 'STUDY', 'FREE'].map((type) => (
+                                <button
+                                    key={type}
+                                    onClick={() => {
+                                        setTab(type);
+                                        setUiPage(1);
+                                    }}
+                                    className={`px-4 py-2 rounded-lg text-sm
+                                    ${tab === type
+                                            ? 'bg-purple-600 text-white'
+                                            : 'bg-slate-800 text-slate-300'
+                                        }`}
+                                >
+                                    {type === 'ALL'
+                                        ? '전체'
+                                        : type === 'FEEDBACK'
+                                            ? '피드백 요청'
+                                            : type === 'STUDY'
+                                                ? '스터디 모집'
+                                                : '자유게시판'}
+                                </button>
+                            ))}
+                        </div>
 
+                        <div className="w-full max-w-[520px]">
+                            <Input
+                                value={keyword}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                placeholder="관심있는 키워드로 검색해보세요 (ex. Spring, 면접후기)"
+                            />
+                        </div>
+                    </div>
 
-            <div className="flex items-center justify-between gap-6 mb-6">
-                {/* 🔹 탭 */}
-                <div className="flex gap-2">
-                    {['ALL', 'FEEDBACK', 'STUDY', 'FREE'].map((type) => (
-                        <button
-                            key={type}
-                            onClick={() => handleTabChange(type)}
-                            className={`px-4 py-2 rounded-lg text-sm
-          ${tab === type ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-300'}`}
-                        >
-                            {type === 'ALL' ? '전체' :
-                                type === 'FEEDBACK' ? '피드백 요청' :
-                                    type === 'STUDY' ? '스터디 모집' : '자유게시판'}
-                        </button>
-                    ))}
-                </div>
-
-                {/* 🔹 검색창 */}
-                <div className="w-full max-w-[520px]">
-                    <Input
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                        placeholder="관심있는 키워드로 검색해보세요 (ex. Spring, 면접후기)"
+                    {/* 🔹 게시글 리스트 */}
+                    <PostList
+                        posts={filteredPosts}
+                        onClickPost={(postId) => navigate(`/community/${postId}`)}
                     />
-                </div>
-            </div>
 
-
-
-            {/* 🔹 게시글 리스트 */}
-            <PostList
-                posts={filteredPosts}
-                onClickPost={(postId) => navigate(`/community/${postId}`)}
-            />
-
-            {/* 🔹 페이지네이션 */}
-            <div className="flex justify-center mt-10">
-                <div className="flex items-center gap-2">
-                    {/* ◀ 이전 */}
-                    <button
-                        type="button"
-                        disabled={uiPage <= 1}
-                        onClick={() => setUiPage((p) => Math.max(p - 1, 1))}
-                        className={`
-        h-10 w-10 rounded-xl border border-white/10 bg-white/5
-        flex items-center justify-center text-slate-300
-        hover:bg-white/10 transition
-        ${uiPage <= 1 ? 'opacity-40 cursor-not-allowed hover:bg-white/5' : ''}
-      `}
-                        aria-label="이전 페이지"
-                    >
-                        ‹
-                    </button>
-
-                    {/* 🔢 페이지 숫자 */}
-                    {Array.from({ length: safeTotalPages }, (_, i) => i + 1).map((num) => {
-                        const active = num === uiPage;
-
-                        return (
+                    {/* 🔹 페이지네이션 */}
+                    <div className="flex justify-center mt-10">
+                        <div className="flex items-center gap-2">
+                            {/* ◀ 이전 */}
                             <button
-                                key={num}
                                 type="button"
-                                onClick={() => setUiPage(num)}
+                                disabled={uiPage <= 1}
+                                onClick={() => setUiPage((p) => Math.max(p - 1, 1))}
                                 className={`
-            h-10 w-10 rounded-xl
-            flex items-center justify-center text-sm font-semibold
-            transition
-            ${active
-                                        ? 'bg-purple-600 text-white shadow-[0_0_18px_rgba(147,51,234,0.55)]'
-                                        : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
-                                    }
-          `}
-                                aria-current={active ? 'page' : undefined}
+                h-10 w-10 rounded-xl border border-white/10 bg-white/5
+                flex items-center justify-center text-slate-300
+                hover:bg-white/10 transition
+                ${uiPage <= 1 ? 'opacity-40 cursor-not-allowed hover:bg-white/5' : ''}
+            `}
                             >
-                                {num}
+                                ‹
                             </button>
-                        );
-                    })}
 
-                    {/* ▶ 다음 */}
-                    <button
-                        type="button"
-                        disabled={uiPage >= safeTotalPages}
-                        onClick={() => setUiPage((p) => Math.min(p + 1, safeTotalPages))}
-                        className={`
-        h-10 w-10 rounded-xl border border-white/10 bg-white/5
-        flex items-center justify-center text-slate-300
-        hover:bg-white/10 transition
-        ${uiPage >= safeTotalPages ? 'opacity-40 cursor-not-allowed hover:bg-white/5' : ''}
-      `}
-                        aria-label="다음 페이지"
-                    >
-                        ›
-                    </button>
+                            {/* 🔢 페이지 숫자 */}
+                            {Array.from({ length: safeTotalPages }, (_, i) => i + 1).map((num) => {
+                                const active = num === uiPage;
+
+                                return (
+                                    <button
+                                        key={num}
+                                        type="button"
+                                        onClick={() => setUiPage(num)}
+                                        className={`
+                        h-10 w-10 rounded-xl
+                        flex items-center justify-center text-sm font-semibold
+                        transition
+                        ${active
+                                                ? 'bg-purple-600 text-white shadow-[0_0_18px_rgba(147,51,234,0.55)]'
+                                                : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'
+                                            }
+                    `}
+                                    >
+                                        {num}
+                                    </button>
+                                );
+                            })}
+
+                            {/* ▶ 다음 */}
+                            <button
+                                type="button"
+                                disabled={uiPage >= safeTotalPages}
+                                onClick={() => setUiPage((p) => Math.min(p + 1, safeTotalPages))}
+                                className={`
+                h-10 w-10 rounded-xl border border-white/10 bg-white/5
+                flex items-center justify-center text-slate-300
+                hover:bg-white/10 transition
+                ${uiPage >= safeTotalPages ? 'opacity-40 cursor-not-allowed hover:bg-white/5' : ''}
+            `}
+                            >
+                                ›
+                            </button>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
-            {/* 🔹 글 작성 모달 */}
+            {/* ✅ Footer (Dashboard와 동일 톤) */}
+            <div className="text-center text-slate-600 text-sm pt-8 border-t border-white/5 mx-6">
+                <p>© 2025 Solo-Q. All rights reserved.</p>
+            </div>
+
+            {/* 🔹 모달들 */}
             {isWriteOpen && (
-                <PostWriteModal
-                    onClose={() => setIsWriteOpen(false)}
-                />
+                <PostWriteModal onClose={() => setIsWriteOpen(false)} />
             )}
 
-            {/* 🔹 상세 모달 */}
             {selectedPostId && (
                 <PostDetailModal
                     postId={selectedPostId}
-                    onClose={() => navigate("/community")}
+                    onClose={() => navigate('/community')}
                 />
             )}
         </div>

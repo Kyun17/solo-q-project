@@ -25,6 +25,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        // ✅ 2. 게시글/댓글 조회(GET)는 인증 없이 허용
+        if (HttpMethod.GET.matches(request.getMethod())
+                && request.getRequestURI().startsWith("/api/posts")) {
+            return true;
+        }
+
         // 2. 헤더에서 토큰 추출
         String authHeader = request.getHeader("Authorization");
 

@@ -6,6 +6,7 @@ import PostWriteModal from './PostWriteModal';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 import Loading from '../common/Loading';
+import CommentSection from './CommentSection';
 
 // 게시글 상세 조회 모달
 function PostDetailModal({ postId, onClose }) {
