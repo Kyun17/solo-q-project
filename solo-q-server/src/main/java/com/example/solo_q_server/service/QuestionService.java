@@ -126,6 +126,7 @@ public class QuestionService {
                 q.getQuestionId(),
                 q.getCategory(),
                 q.getContent(),
+                q.getAnswer(),
                 q.getTags()
         );
     }
