@@ -30,12 +30,13 @@ public class Question {
     @Column(nullable = false)
     private String category; // 기술, 인성, CS 등
 
-    @Column(nullable = false, columnDefinition = "CLOB") // 오라클 CLOB 타입 매핑
+    @Column(nullable = false, length = 4000) // 오라클 CLOB 타입 매핑
     private String content;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(length = 4000)
     private String answer;
 
+    @Column(length = 1000)
     private String tags; // "Java,Spring" 처럼 콤마로 구분
 
     @CreationTimestamp
