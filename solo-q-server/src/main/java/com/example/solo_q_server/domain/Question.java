@@ -28,13 +28,14 @@ private Member member;
 @Column(nullable = false)
 private String category; // 기술, 인성, CS 등
 
-@Column(nullable = false, columnDefinition = "CLOB") // 오라클 CLOB 타입 매핑
-private String content;
+    @Column(nullable = false, length = 4000)
+    private String content;
 
-@Column(columnDefinition = "CLOB")
-private String answer;
+    @Column(length = 4000)
+    private String answer;
 
-private String tags; // "Java,Spring" 처럼 콤마로 구분
+    @Column(length = 1000)
+    private String tags;
 
 @CreationTimestamp
 private LocalDateTime createdAt;
