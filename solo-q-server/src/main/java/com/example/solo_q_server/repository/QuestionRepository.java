@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    // ✅ 내 질문 목록 검색(카테고리/키워드/태그)
+    // ✅ 1. 내 질문 목록 검색 (카테고리 / 키워드 / 태그)
     @Query("""
         select q
         from Question q
@@ -34,11 +35,47 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             Pageable pageable
     );
 
-    // ✅ Oracle DB에서 랜덤 질문 1개 가져오기 (nativeQuery)
-    // ⚠️ 테이블명이 실제로 QUESTION이면 아래처럼 대문자로 두는 게 안전
-    @Query(value = "SELECT * FROM (SELECT * FROM QUESTION ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 1", nativeQuery = true)
+    // ✅ 2. Oracle DB에서 랜덤 질문 1개
+    @Query(
+            value = "SELECT * FROM (SELECT * FROM QUESTION ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 1",
+            nativeQuery = true
+    )
     Optional<Question> findRandomQuestion();
 
-    // ✅ 특정 멤버의 질문 개수 조회
+    // ✅ 3. 특정 멤버의 질문 개수 조회
     long countByMember_MemberId(Long memberId);
+
+    // ✅ 4. 특정 카테고리에서 랜덤 질문 N개
+    @Query(
+            value = """
+            SELECT *
+            FROM (
+                SELECT *
+                FROM QUESTION
+                WHERE category = :category
+                ORDER BY DBMS_RANDOM.VALUE
+            )
+            WHERE ROWNUM <= :limit
+        """,
+            nativeQuery = true
+    )
+    List<Question> findRandomQuestionsByCategory(
+            @Param("category") String category,
+            @Param("limit") int limit
+    );
+
+    // ✅ 5. 전체 질문 중 랜덤 질문 N개
+    @Query(
+            value = """
+            SELECT *
+            FROM (
+                SELECT *
+                FROM QUESTION
+                ORDER BY DBMS_RANDOM.VALUE
+            )
+            WHERE ROWNUM <= :limit
+        """,
+            nativeQuery = true
+    )
+    List<Question> findAllRandomQuestions(@Param("limit") int limit);
 }
