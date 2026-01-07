@@ -39,6 +39,12 @@ public class Question {
     private String tags;
 
     @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+
     public Question(Member member, String category, String content, String answer, String tags) {
         this.member = member;
         this.category = category;
