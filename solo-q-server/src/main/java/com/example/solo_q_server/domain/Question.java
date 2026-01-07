@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "QUESTION")
 public class Question {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
@@ -30,18 +29,35 @@ public class Question {
     @Column(nullable = false)
     private String category; // 기술, 인성, CS 등
 
-    @Column(nullable = false, length = 4000) // 오라클 CLOB 타입 매핑
+    @Column(nullable = false, length = 4000)
     private String content;
 
     @Column(length = 4000)
     private String answer;
 
     @Column(length = 1000)
-    private String tags; // "Java,Spring" 처럼 콤마로 구분
+    private String tags;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+
+    public Question(Member member, String category, String content, String answer, String tags) {
+        this.member = member;
+        this.category = category;
+        this.content = content;
+        this.answer = answer;
+        this.tags = tags;
+    }
+
+    // ✅ 수정 로직(QuestionService에서 q.update(...) 쓰고 있으니 필요)
+    public void update(String category, String content, String answer, String tags) {
+        this.category = category;
+        this.content = content;
+        this.answer = answer;
+        this.tags = tags;
+    }
 }
