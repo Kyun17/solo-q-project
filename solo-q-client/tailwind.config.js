@@ -12,8 +12,8 @@ export default {
             colors: {
                 // Solo-Q Brand Colors
                 background: '#020617', // Slate 950
-                primary: '#9333ea', // Purple 600
-                secondary: '#a3e635', // Lime 400
+                primary: '#9333ea',    // Purple 600
+                secondary: '#a3e635',  // Lime 400
                 surface: 'rgba(30, 41, 59, 0.5)', // Glass effect base
             },
             animation: {
