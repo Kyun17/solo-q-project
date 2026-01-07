@@ -28,14 +28,25 @@ private Member member;
 @Column(nullable = false)
 private String category; // 기술, 인성, CS 등
 
+<<<<<<< HEAD
     @Column(nullable = false, length = 4000)
+=======
+    @Column(nullable = false)
+    private String category; // 기술, 인성, CS 등
+
+    @Column(nullable = false, length = 4000) // 오라클 CLOB 타입 매핑
+>>>>>>> 88024603d22475b9dd55dc4f162741ba987ebd7b
     private String content;
 
     @Column(length = 4000)
     private String answer;
 
     @Column(length = 1000)
+<<<<<<< HEAD
     private String tags;
+=======
+    private String tags; // "Java,Spring" 처럼 콤마로 구분
+>>>>>>> 88024603d22475b9dd55dc4f162741ba987ebd7b
 
 @CreationTimestamp
 private LocalDateTime createdAt;

@@ -6,14 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-// 댓글 작성 요청 DTO
+// 댓글 수정 요청 DTO
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentSaveRequest {
+public class CommentUpdateRequest {
 
     @NotBlank(message = "댓글 내용을 입력해야 합니다.")
     private String content;
 
 }
+

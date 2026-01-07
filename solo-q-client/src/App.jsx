@@ -8,6 +8,7 @@ import InterviewActivePage from './pages/interview/InterviewActivePage';
 import InterviewSetupPage from './pages/interview/InterviewSetupPage';
 import InterviewResultPage from './pages/interview/InterviewResultPage';
 import QuestionNotePage from './pages/note/QuestionNotePage';
+import CommunityPage from './pages/community/CommunityPage';
 
 // ---------------------------------------------------------
 // 1. 보안 가드 컴포넌트 (PrivateRoute)
@@ -51,7 +52,10 @@ function App() {
 
           {/* 기타 기능 페이지들 */}
           <Route path="/note" element={<QuestionNotePage />} />
-          <Route path="/community" element={<div className="min-h-screen bg-gray-900 text-white p-10 text-center">커뮤니티 (준비중)</div>} />
+
+          {/* 커뮤니티 페이지들 */}
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/community/:postId" element={<CommunityPage />} />
         </Route>
 
         {/* === 404 페이지 === */}
