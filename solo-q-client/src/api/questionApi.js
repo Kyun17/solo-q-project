@@ -1,9 +1,5 @@
-import { axiosInstance } from "./axiosInstance";
+import axiosInstance from "./axiosInstance";
 
-/**
- * 목록 조회 (페이지 응답 형태)
- * response: { items: [], page, size, totalElements, totalPages, last }
- */
 export async function fetchQuestions({ category, q, tag, page = 0, size = 10 }) {
   const params = { page, size };
   if (category && category !== "ALL") params.category = category;
