@@ -127,7 +127,8 @@ public class QuestionService {
                 q.getCategory(),
                 q.getContent(),
                 q.getAnswer(),
-                q.getTags()
+                q.getTags(),
+                q.getCreatedAt()
         );
     }
 
@@ -137,7 +138,8 @@ public class QuestionService {
                 q.getCategory(),
                 q.getContent(),
                 q.getAnswer(),
-                q.getTags()
+                q.getTags(),
+                q.getCreatedAt()
         );
     }
 
