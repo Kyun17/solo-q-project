@@ -8,14 +8,16 @@ import Button from '../common/Button';
 import Loading from '../common/Loading';
 import CommentSection from './CommentSection';
 
+import useAuthStore from '../../store/useAuthStore';
+
 // 게시글 상세 조회 모달
 function PostDetailModal({ postId, onClose }) {
     const queryClient = useQueryClient();
     const [isEditOpen, setIsEditOpen] = useState(false);
 
-    // 🔹 임시 로그인 정보 (나중에 auth로 교체)
-    const isLoggedIn = false; // 지금은 false
-    const myId = 1;          // 로그인한 사용자 ID (임시)
+    // 🔹 로그인 정보
+    const { isLoggedIn, user } = useAuthStore();
+    const myId = user?.memberId;
 
     // 🔹 게시글 상세 조회
     const { data: post, isLoading, isError } = useQuery({
@@ -58,19 +60,10 @@ function PostDetailModal({ postId, onClose }) {
         );
     }
 
-    const {
-        title,
-        content,
-        boardType,
-        viewCount,
-        timeAgo,
-        createdAt,
-        updatedAt,
-        writerId,
-    } = post;
+    const { content, writerId, updatedAt } = post;
 
-    // 🔹 내가 쓴 글인지 여부
-    const isMine = isLoggedIn && writerId === myId;
+    // 본인 작성 여부 확인
+    const isMine = isLoggedIn && myId != null && Number(writerId) === Number(myId);
 
     const badgeStyle = {
         FEEDBACK: 'bg-purple-600/20 text-purple-400',
@@ -125,35 +118,11 @@ function PostDetailModal({ postId, onClose }) {
                     </div>
 
                     {/* 🔹 Comments */}
-                    <div className="mt-6 pt-6 border-t border-white/10">
-                        <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-sm font-semibold text-white">댓글</h3>
-                            <span className="text-xs text-slate-400">{comments.length}개</span>
-                        </div>
-
-                        {commentsLoading ? (
-                            <div className="text-sm text-slate-400">불러오는 중...</div>
-                        ) : comments.length === 0 ? (
-                            <div className="text-sm text-slate-400">첫 댓글을 남겨보세요.</div>
-                        ) : (
-                            <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2">
-                                {comments.map((c) => (
-                                    <div key={c.commentId ?? c.id} className="rounded-xl bg-white/5 border border-white/10 p-3">
-                                        <div className="text-xs text-slate-400 mb-1">
-                                            {c.writerNickname ?? '익명'} · {c.timeAgo ?? ''}
-                                        </div>
-                                        <div className="text-sm text-slate-200 whitespace-pre-wrap leading-6">
-                                            {c.content}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <CommentSection postId={postId} />
 
 
                     {/* 🔹 Footer Buttons */}
-                    <div className="flex justify-between">
+                    <div className="flex justify-between mt-6">
                         <Button variant="ghost" onClick={onClose}>
                             닫기
                         </Button>

@@ -53,11 +53,11 @@ export async function createComment(postId, payload) {
 
 // 댓글 수정 (회원만)
 export async function updateComment(commentId, payload) {
-    const res = await api.patch(`/posts/${commentId}`, payload);
+    const res = await api.patch(`/comments/${commentId}`, payload);
     return res.data; // CommentResponse
 }
 
 // 댓글 삭제 (회원만)
 export async function deleteComment(commentId) {
-    await api.delete(`/posts/${commentId}`);
+    await api.delete(`/comments/${commentId}`);
 }

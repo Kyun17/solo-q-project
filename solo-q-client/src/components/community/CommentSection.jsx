@@ -27,7 +27,7 @@ function CommentSection({ postId }) {
     const [editContent, setEditContent] = useState('');
 
     // 🔹 댓글 조회
-    const { data: comments = [], isLoading } = useQuery({
+    const { data: comments = [], isLoading, isError, error } = useQuery({
         queryKey: ['comments', postId],
         queryFn: () => fetchComments(postId),
         enabled: !!postId,
@@ -86,6 +86,7 @@ function CommentSection({ postId }) {
             {isError && (
                 <div className="text-sm text-red-400 mb-4">
                     댓글을 불러오지 못했습니다.
+                    <div className="mt-1 text-xs text-red-300">{String(error?.message ?? '')}</div>
                 </div>
             )}
 
