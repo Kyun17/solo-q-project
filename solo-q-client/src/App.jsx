@@ -9,6 +9,7 @@ import InterviewSetupPage from './pages/interview/InterviewSetupPage';
 import InterviewResultPage from './pages/interview/InterviewResultPage';
 import QuestionNotePage from './pages/note/QuestionNotePage';
 import CommunityPage from './pages/community/CommunityPage';
+import SignupPage from './pages/auth/SignupPage';
 
 // ---------------------------------------------------------
 // 1. 보안 가드 컴포넌트 (PrivateRoute)
@@ -38,7 +39,7 @@ function App() {
         {/* === 로그인 안 한 사람만 접근 가능한 페이지 (PublicRoute) === */}
         <Route element={<PublicRoute />}>
           <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/signup" element={<div className="min-h-screen bg-gray-900 text-white p-10 text-center">회원가입 페이지 (준비중)</div>} />
+          <Route path="/auth/signup" element={<SignupPage />} />
         </Route>
 
         {/* === [중요] 로그인한 사람만 접근 가능한 페이지 (PrivateRoute) === */}

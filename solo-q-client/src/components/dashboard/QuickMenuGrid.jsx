@@ -35,10 +35,7 @@ const QuickMenuGrid = ({ data }) => {
                     <p className="text-slate-400 text-sm">
                         등록된 질문 <span className="text-white font-bold">{questionCount}</span>개
                     </p>
-                    <div className="mt-3 flex gap-1 h-1.5 rounded-full overflow-hidden bg-slate-700/50">
-                        <div className="w-2/3 bg-cyan-500"></div>
-                        <div className="w-1/3 bg-transparent"></div>
-                    </div>
+
                 </div>
                 <div className="flex items-center text-cyan-400 text-sm font-bold gap-2">
                     질문 관리하기 <ArrowRight size={16} />
