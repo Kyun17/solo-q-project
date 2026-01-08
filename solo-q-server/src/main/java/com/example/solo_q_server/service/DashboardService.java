@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,9 +23,16 @@ public class DashboardService {
     private final QuestionRepository questionRepository;
 
     public DashboardResponse getDashboardData(Long memberId) {
+
+        // 오늘의 0시 0분 구하기
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+
         // 1. 회원 정보 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 오늘 연습 횟수
+        long todayCount = interviewResultRepository.countTodayPractice(memberId,startOfDay  );
 
         // 2. 총 연습 횟수 조회
         long totalCount = interviewResultRepository.countByMemberId(memberId);
@@ -56,6 +66,7 @@ public class DashboardService {
         return DashboardResponse.builder()
                 .nickname(member.getNickname())
                 .level(member.getLevel())
+                .todayPractice(todayCount)
                 .totalPractice(totalCount)
                 .currentExp(currentExp)   // 현재 경험치 (예: 2)
                 .maxExp(levelUpUnit)      // 목표 경험치 (예: 5)

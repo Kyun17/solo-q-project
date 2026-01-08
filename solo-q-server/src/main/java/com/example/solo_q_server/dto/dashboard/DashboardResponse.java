@@ -8,6 +8,7 @@ import lombok.Getter;
 public class DashboardResponse {
     private String nickname;
     private Integer level;
+    private Long todayPractice;
     private Long totalPractice;
     // weekly 삭제 -> exp 관련 필드 추가
     private Long currentExp; // 현재 경험치 (예: 2)
