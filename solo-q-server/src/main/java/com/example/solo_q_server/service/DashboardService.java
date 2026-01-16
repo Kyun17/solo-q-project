@@ -46,7 +46,7 @@ public class DashboardService {
         // 현재는 DB에 저장된 level 값을 그대로 사용합니다.
 
         // 4. 오늘의 추천 질문 (랜덤) 조회
-        Question randomQ = questionRepository.findRandomQuestion().orElse(null);
+        Question randomQ = questionRepository.findRandomQuestion(memberId).orElse(null);
 
         // ✅ 추가: 내 질문 개수 조회
         long myQuestionCount = questionRepository.countByMember_MemberId(memberId);

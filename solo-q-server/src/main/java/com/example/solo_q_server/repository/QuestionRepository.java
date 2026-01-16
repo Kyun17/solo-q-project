@@ -37,10 +37,16 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     // ✅ 2. Oracle DB에서 랜덤 질문 1개
     @Query(
-            value = "SELECT * FROM (SELECT * FROM QUESTION ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM <= 1",
+            value = """
+                    SELECT * FROM 
+                    (SELECT * FROM QUESTION 
+                    WHERE member_id = :memberId 
+                    ORDER BY DBMS_RANDOM.VALUE
+                    ) WHERE ROWNUM <= 1
+                    """,
             nativeQuery = true
     )
-    Optional<Question> findRandomQuestion();
+    Optional<Question> findRandomQuestion(@Param("memberId") Long memberId);
 
     // ✅ 3. 특정 멤버의 질문 개수 조회
     long countByMember_MemberId(Long memberId);
@@ -53,6 +59,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
                 SELECT *
                 FROM QUESTION
                 WHERE category = :category
+                 AND member_id = :memberId
                 ORDER BY DBMS_RANDOM.VALUE
             )
             WHERE ROWNUM <= :limit
@@ -60,6 +67,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             nativeQuery = true
     )
     List<Question> findRandomQuestionsByCategory(
+            @Param("memberId") Long memberId,
             @Param("category") String category,
             @Param("limit") int limit
     );
@@ -71,11 +79,14 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             FROM (
                 SELECT *
                 FROM QUESTION
+                WHERE member_id = :memberId
                 ORDER BY DBMS_RANDOM.VALUE
             )
             WHERE ROWNUM <= :limit
         """,
             nativeQuery = true
     )
-    List<Question> findAllRandomQuestions(@Param("limit") int limit);
+    List<Question> findAllRandomQuestions(
+            @Param("memberId") Long memberId,
+            @Param("limit") int limit);
 }
