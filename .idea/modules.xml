@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/solo-q-project.iml" filepath="$PROJECT_DIR$/.idea/solo-q-project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/solo-q-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/solo-q-server.main.iml" />
     </modules>
   </component>
 </project>

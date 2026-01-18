@@ -28,14 +28,14 @@ public class InterviewService {
     /**
      * 모의 면접 질문지 생성 (랜덤)
      */
-    public List<InterviewQuestionResponse> createInterviewQuestions(String category, int count) {
+    public List<InterviewQuestionResponse> createInterviewQuestions(Long memberId, String category, int count) {
         List<Question> questions;
 
         // ✅ 수정: 카테고리가 '랜덤'이면 전체에서 조회, 아니면 해당 카테고리에서 조회
         if ("랜덤".equals(category)) {
-            questions = questionRepository.findAllRandomQuestions(count);
+            questions = questionRepository.findAllRandomQuestions(memberId, count);
         } else {
-            questions = questionRepository.findRandomQuestionsByCategory(category, count);
+            questions = questionRepository.findRandomQuestionsByCategory(memberId, category, count);
         }
 
         return questions.stream()

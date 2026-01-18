@@ -22,6 +22,9 @@ public interface InterviewResultRepository extends JpaRepository<InterviewResult
             @Param("end") LocalDateTime end
     );
 
+    @Query("SELECT COUNT(r) FROM InterviewResult r WHERE r.member.memberId = :memberId AND r.createdAt >= :startOfDay")
+    long countTodayPractice(@Param("memberId") Long memberId, @Param("startOfDay") LocalDateTime startOfDay);
+
     // ✅ 3. [추가] 내 연습 기록 전체 조회 (최신순)
     List<InterviewResult> findAllByMember_MemberIdOrderByCreatedAtDesc(Long memberId);
 }

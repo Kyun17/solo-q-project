@@ -33,8 +33,10 @@ const HeaderSection = ({ data }) => {
                                 <Flame size={20} fill="currentColor" />
                             </div>
                             <div>
-                                <div className="text-xs text-slate-500 font-bold uppercase">Streak</div>
-                                <div className="text-xl font-bold text-white">3일 연속</div>
+                                <div className="text-xs text-slate-500 font-bold uppercase">Today</div>
+                                <div className="text-xl font-bold text-white">
+                                    {stats.todayPractice > 0 ? `${stats.todayPractice}회 완료` : '0회'}
+                                </div>
                             </div>
                         </div>
                         <div className="bg-slate-800/50 backdrop-blur-md border border-white/5 px-5 py-3 rounded-2xl flex items-center gap-3">

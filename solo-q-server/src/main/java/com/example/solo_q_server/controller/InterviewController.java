@@ -22,10 +22,12 @@ public class InterviewController {
     // 요청 예시: GET /api/interview/questions?category=기술&count=5
     @GetMapping("/questions")
     public ResponseEntity<List<InterviewQuestionResponse>> getInterviewQuestions(
+            HttpServletRequest httpRequest,
             @RequestParam String category,
             @RequestParam(defaultValue = "5") int count
     ) {
-        List<InterviewQuestionResponse> questions = interviewService.createInterviewQuestions(category, count);
+        Long memberId = (Long) httpRequest.getAttribute("memberId");
+        List<InterviewQuestionResponse> questions = interviewService.createInterviewQuestions(memberId,category, count);
         return ResponseEntity.ok(questions);
     }
 

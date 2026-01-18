@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -57,8 +59,9 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .nickname(request.getNickname())
-                .role("ROLE_USER") // 기본 권한
-                .level(1)          // 기본 레벨
+                .role("USER") // 기본 권한
+                .level(1) // 기본 레벨
+                .createdAt(LocalDateTime.now())
                 .build();
 
         // 3. DB 저장
