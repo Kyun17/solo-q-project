@@ -47,7 +47,7 @@ const DashboardPage = () => {
       </div>
 
       <div className="text-center text-slate-600 text-sm pt-8 border-t border-white/5 mx-6">
-        <p>© 2025 Hitoridemo. All rights reserved.</p>
+        <p>© 2025 HITORIdemo. All rights reserved.</p>
       </div>
     </div>
   );
