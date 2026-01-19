@@ -100,26 +100,29 @@ export default function QuestionNotePage() {
 
         {/* ✅ 메인 콘텐츠 */}
         <div className="mx-auto max-w-6xl px-4 md:px-8 py-6 md:py-10">
-          {/* Title + CTA */}
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between mb-8">
-            <div className="text-center md:text-left">
-              <h1 className="flex items-center justify-center md:justify-start gap-2 text-2xl md:text-3xl font-extrabold tracking-tight">
+          {/* Title + CTA (수정됨) */}
+          {/* flex-row로 변경하여 가로 배치, justify-between으로 양 끝 정렬 */}
+          <div className="flex flex-row items-end justify-between gap-4 mb-6 md:mb-8">
+            <div className="text-left">
+              <h1 className="flex items-center gap-2 text-2xl md:text-3xl font-extrabold tracking-tight">
                 내 질문 노트 <span className="text-lg opacity-90">📝</span>
               </h1>
-              <p className="mt-2 text-xs md:text-sm text-zinc-400 break-keep">
-                면접 예상 질문을 정리하고 답변을 다듬어보세요.
+              <p className="mt-1 text-xs md:text-sm text-zinc-400 break-keep">
+                면접 질문을 정리하고 답변을 다듬어보세요.
               </p>
             </div>
 
-            {/* 모바일에서는 버튼을 꽉 차게(w-full) */}
+            {/* 버튼: 모바일에서는 작게, 데스크탑에서는 길게 */}
             <button
               onClick={openCreate}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3.5 md:py-3 text-sm font-bold text-zinc-950
-                        shadow-[0_10px_30px_rgba(0,0,0,0.25)]
-                        hover:bg-zinc-100 active:scale-[0.98] transition"
+              className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2.5 md:px-5 md:py-3 text-sm font-bold text-zinc-950
+                         shadow-[0_4px_14px_rgba(255,255,255,0.2)]
+                         hover:bg-zinc-100 active:scale-[0.98] transition"
             >
               <span className="text-lg leading-none">＋</span>
-              질문 추가하기
+              {/* 모바일: '추가', 데스크탑: '질문 추가하기' */}
+              <span className="md:hidden">추가</span>
+              <span className="hidden md:inline">질문 추가하기</span>
             </button>
           </div>
 
@@ -163,7 +166,7 @@ export default function QuestionNotePage() {
               onClick={() => goPage(page - 1)}
               disabled={page <= 0}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium
-                        disabled:opacity-30 hover:bg-white/10 transition active:scale-95"
+                         disabled:opacity-30 hover:bg-white/10 transition active:scale-95"
             >
               이전
             </button>
@@ -174,7 +177,7 @@ export default function QuestionNotePage() {
               onClick={() => goPage(page + 1)}
               disabled={data ? data.last : true}
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium
-                        disabled:opacity-30 hover:bg-white/10 transition active:scale-95"
+                         disabled:opacity-30 hover:bg-white/10 transition active:scale-95"
             >
               다음
             </button>

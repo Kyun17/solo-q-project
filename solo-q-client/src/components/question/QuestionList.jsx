@@ -1,12 +1,12 @@
 import QuestionItem from './QuestionItem';
 
 export default function QuestionList({ loading, items, onEdit, onDelete }) {
-  // 🔹 그리드 레이아웃 스타일 (재사용)
-  // 모바일: 1열 (gap-4)
+  // 🔹 그리드 레이아웃 스타일 수정
+  // 모바일: 2열 (gap-3) -> 한 화면에 더 많이 보임!
   // 태블릿: 2열 (gap-5)
   // 데스크탑: 3열 (gap-6)
   const gridClasses =
-    'grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6';
+    'grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6';
 
   if (loading) {
     return (
@@ -14,7 +14,7 @@ export default function QuestionList({ loading, items, onEdit, onDelete }) {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-[200px] md:h-[220px] rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl
+            className="h-[180px] md:h-[220px] rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl
                        shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset] animate-pulse"
           />
         ))}

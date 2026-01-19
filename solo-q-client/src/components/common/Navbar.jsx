@@ -176,14 +176,14 @@ const Navbar = () => {
                 className={getMobileLinkClass('/interview')}
                 onClick={() => setIsMenuOpen(false)}
               >
-                모의 면접
+                모의면접
               </Link>
               <Link
                 to="/note"
                 className={getMobileLinkClass('/note')}
                 onClick={() => setIsMenuOpen(false)}
               >
-                질문 노트
+                질문노트
               </Link>
               <Link
                 to="/community"
