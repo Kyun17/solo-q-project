@@ -130,7 +130,7 @@ const Navbar = () => {
             {/* Bottom Actions (깔끔한 50:50) */}
             <div className="grid grid-cols-2 gap-3">
               <Link
-                to="/login"
+                to="auth/login"
                 className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-700 text-slate-300 font-semibold hover:bg-slate-800 hover:text-white transition-all text-sm"
               >
                 <SignIn size={18} />
@@ -138,7 +138,7 @@ const Navbar = () => {
               </Link>
 
               <Link
-                to="/signup"
+                to="auth/signup"
                 className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-slate-950 font-bold hover:bg-slate-200 transition-all text-sm shadow-md"
               >
                 <UserPlus size={18} />
