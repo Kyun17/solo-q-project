@@ -1,152 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { List, X, Atom } from '@phosphor-icons/react'; // 햄버거(List), 닫기(X), 로고(Atom) 아이콘
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Navbar from '../../components/common/Navbar';
+import {
+  VideoCamera,
+  Notebook,
+  UsersThree,
+  PlayCircle,
+  Atom,
+  Database,
+  Cloud,
+} from '@phosphor-icons/react';
+import { motion } from 'framer-motion';
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
-
-  // 스크롤 감지 (배경색 변경용)
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // 페이지 이동 시 메뉴 닫기
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
-
+const LandingPage = () => {
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || isOpen
-          ? 'bg-slate-950/80 backdrop-blur-md border-b border-white/5'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        {/* --- Logo --- */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-fuchsia-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-all">
-            <Atom size={24} weight="fill" className="animate-spin-slow" />
-          </div>
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-            Solo-Q
-          </span>
-        </Link>
+    <div className="min-h-screen relative overflow-hidden">
+      <Navbar />
 
-        {/* --- Desktop Menu (md 이상에서만 보임) --- */}
-        <div className="hidden md:flex items-center gap-8">
-          <div className="flex items-center gap-6 text-sm font-medium text-slate-400">
-            <Link to="/note" className="hover:text-white transition-colors">
-              질문 노트
-            </Link>
+      {/* --- Hero Section --- */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6">
+        {/* Background Blobs (Animated) */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"></div>
+        <div
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"
+          style={{ animationDelay: '2s' }}
+        ></div>
+
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm text-secondary text-sm font-semibold mb-8"
+          >
+            <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+            AI 기반 면접 파트너, 솔로큐 런칭!
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-5xl md:text-7xl font-extrabold leading-tight mb-8 tracking-tight"
+          >
+            면접 준비, <br className="md:hidden" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-white">
+              혼자서도 완벽하게
+            </span>
+            <br />
+            레벨업 하세요.
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+          >
+            스터디 구할 필요 없이, 웹캠 하나로 실전처럼 연습하세요.
+            <br className="hidden md:block" />
+            예상 질문 관리부터 모의 면접 녹화, 피드백까지 한 번에 해결해
+            드립니다.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-4"
+          >
             <Link
-              to="/interview"
-              className="hover:text-white transition-colors"
+              to="/dashboard"
+              className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-fuchsia-600 rounded-full text-white font-bold text-lg hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
-              모의 면접
+              <VideoCamera size={24} weight="fill" />
+              모의 면접 체험하기
             </Link>
-            <Link
-              to="/community"
-              className="hover:text-white transition-colors"
-            >
-              커뮤니티
-            </Link>
-          </div>
-          <div className="h-5 w-px bg-slate-700"></div>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/login"
-              className="text-sm font-semibold text-white hover:text-purple-400 transition-colors"
-            >
-              로그인
-            </Link>
-            <Link
-              to="/signup"
-              className="px-5 py-2.5 bg-white text-slate-900 text-sm font-bold rounded-full hover:bg-purple-50 transition-colors shadow-lg shadow-white/10"
-            >
-              무료로 시작하기
-            </Link>
+            <button className="w-full md:w-auto px-8 py-4 bg-slate-800/50 border border-slate-700 backdrop-blur-sm rounded-full text-white font-semibold hover:bg-slate-700 transition-all flex items-center justify-center gap-2">
+              <PlayCircle size={24} />
+              시연 영상 보기
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* --- Tech Stack Banner --- */}
+      <section className="py-10 border-y border-white/5 bg-black/20 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 opacity-60">
+          <span className="text-sm font-semibold text-slate-500 uppercase tracking-widest hidden md:block">
+            Powered by
+          </span>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12 text-xl font-bold text-slate-400">
+            <div className="flex items-center gap-2">
+              <Atom size={24} className="text-blue-400" /> React
+            </div>
+            <div className="flex items-center gap-2">
+              <Database size={24} className="text-green-400" /> Spring Boot
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center text-xs text-white">
+                O
+              </div>{' '}
+              Oracle
+            </div>
+            <div className="flex items-center gap-2">
+              <Cloud size={24} className="text-cyan-400" /> WebRTC
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* --- Mobile Toggle Button (md 미만에서만 보임) --- */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-slate-300 hover:text-white p-2"
-        >
-          {isOpen ? <X size={28} /> : <List size={28} />}
-        </button>
-      </div>
+      {/* --- Features Section --- */}
+      <section id="features" className="py-24 px-6 relative">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              합격을 위한 <span className="text-purple-400">Solo-Q</span>만의
+              솔루션
+            </h2>
+            <p className="text-slate-400">
+              면접 준비의 A to Z를 빈틈없이 채워드립니다.
+            </p>
+          </div>
 
-      {/* --- Mobile Menu Overlay --- */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-slate-950 border-b border-white/5 overflow-hidden"
-          >
-            <div className="px-6 py-8 flex flex-col gap-6">
-              {/* Navigation Links */}
-              <div className="flex flex-col gap-4 text-lg font-medium text-slate-300">
-                <Link
-                  to="/note"
-                  className="flex items-center justify-between p-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Notebook size={32} weight="duotone" />,
+                title: '나만의 질문 노트',
+                desc: '인성, 기술, CS 등 분야별로 예상 질문을 정리하고 태그로 관리하세요.',
+                color: 'text-cyan-400',
+                bg: 'bg-cyan-400/10',
+              },
+              {
+                icon: <VideoCamera size={32} weight="duotone" />,
+                title: 'AI 모의 면접',
+                desc: '웹캠을 켜고 랜덤 질문에 답변해보세요. 타이머가 실전 같은 긴장감을 줍니다.',
+                color: 'text-purple-400',
+                bg: 'bg-purple-400/10',
+                highlight: true,
+              },
+              {
+                icon: <UsersThree size={32} weight="duotone" />,
+                title: '피드백 커뮤니티',
+                desc: '혼자 알기 아까운 답변을 공유하고 현직자, 취준생 동료에게 피드백을 받으세요.',
+                color: 'text-lime-400',
+                bg: 'bg-lime-400/10',
+              },
+            ].map((feature, idx) => (
+              <div
+                key={idx}
+                className={`p-8 rounded-3xl bg-slate-800/40 border border-slate-700 backdrop-blur-sm hover:-translate-y-2 transition-transform duration-300 ${
+                  feature.highlight
+                    ? 'border-purple-500/50 shadow-lg shadow-purple-500/10'
+                    : ''
+                }`}
+              >
+                <div
+                  className={`w-14 h-14 rounded-2xl ${feature.bg} ${feature.color} flex items-center justify-center mb-6`}
                 >
-                  질문 노트 <span className="text-xs text-slate-600">Note</span>
-                </Link>
-                <Link
-                  to="/interview"
-                  className="flex items-center justify-between p-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                >
-                  모의 면접{' '}
-                  <span className="text-xs text-slate-600">Interview</span>
-                </Link>
-                <Link
-                  to="/community"
-                  className="flex items-center justify-between p-2 hover:text-white hover:bg-white/5 rounded-lg transition-all"
-                >
-                  커뮤니티{' '}
-                  <span className="text-xs text-slate-600">Community</span>
-                </Link>
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-white">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-400 leading-relaxed">{feature.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
-
-              {/* Mobile Actions (모바일 최적화: 세로 배치) */}
-              <div className="flex flex-col gap-3">
-                {/* 1. 로그인 버튼 */}
-                <Link
-                  to="/login"
-                  className="w-full py-3 text-center text-slate-400 hover:text-white font-semibold rounded-xl hover:bg-white/5 transition-all"
-                >
-                  로그인
-                </Link>
-
-                {/* 2. 회원가입 버튼 (강조됨) */}
-                <Link
-                  to="/signup"
-                  className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold text-center rounded-xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 active:scale-[0.98] transition-all"
-                >
-                  회원가입 {/* 모바일에서는 짧고 명확하게 변경 */}
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+      {/* --- Footer --- */}
+      <footer className="py-12 border-t border-slate-800 bg-slate-950 text-center text-slate-500 text-sm">
+        <p>© 2025 Solo-Q Project. Created for Portfolio.</p>
+      </footer>
+    </div>
   );
 };
 
-export default Navbar;
+export default LandingPage;
