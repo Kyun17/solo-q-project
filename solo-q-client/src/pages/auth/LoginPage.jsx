@@ -63,7 +63,7 @@ const LoginPage = () => {
             H
           </div>
           <span className="font-bold text-4xl tracking-tight drop-shadow-lg">
-            HITORI<span className="text-purple-400">demo</span>
+            HITORI<span className="text-purple-400"> demo</span>
           </span>
         </Link>
 
