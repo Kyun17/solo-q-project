@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate, Link } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+  useNavigate,
+  Link,
+} from 'react-router-dom';
 import LandingPage from './pages/main/LandingPage';
-import './App.css'
+import './App.css';
 import DashboardPage from './pages/main/DashboardPage';
 import LoginPage from './pages/auth/LoginPage';
 import InterviewActivePage from './pages/interview/InterviewActivePage';
@@ -10,6 +18,7 @@ import InterviewResultPage from './pages/interview/InterviewResultPage';
 import QuestionNotePage from './pages/note/QuestionNotePage';
 import CommunityPage from './pages/community/CommunityPage';
 import SignupPage from './pages/auth/SignupPage';
+import useAuthStore from './store/useAuthStore';
 
 // ---------------------------------------------------------
 // 1. 보안 가드 컴포넌트 (PrivateRoute)
@@ -30,6 +39,30 @@ const PublicRoute = () => {
 // Main App Component
 // ---------------------------------------------------------
 function App() {
+  const { logout } = useAuthStore();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expirationTime = payload.exp * 1000;
+        const now = Date.now();
+
+        // 만료 시간이 지났다면?
+        if (now > expirationTime) {
+          alert('세션이 만료되었습니다.');
+          logout(); // 로그아웃 처리
+          window.location.href = '/login';
+        }
+      } catch (e) {
+        // 토큰이 깨졌거나 이상하면 그냥 로그아웃
+        logout();
+      }
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -60,7 +93,14 @@ function App() {
         </Route>
 
         {/* === 404 페이지 === */}
-        <Route path="*" element={<div className="min-h-screen bg-gray-900 text-white p-10 text-center">404 Not Found</div>} />
+        <Route
+          path="*"
+          element={
+            <div className="min-h-screen bg-gray-900 text-white p-10 text-center">
+              404 Not Found
+            </div>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
