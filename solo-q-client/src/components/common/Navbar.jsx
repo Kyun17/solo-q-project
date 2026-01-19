@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // useLocation 추가
-import { ArrowRight, Menu, X, User, LogOut } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ArrowRight, Menu, X, LogOut, User } from 'lucide-react'; // User 아이콘 추가 확인
 import useAuthStore from '../../store/useAuthStore';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // 현재 경로 정보 가져오기
+  const location = useLocation();
   const { isLoggedIn, user, logout } = useAuthStore();
 
   const [scrolled, setScrolled] = useState(false);
@@ -21,29 +21,31 @@ const Navbar = () => {
     if (confirm('정말 로그아웃 하시겠습니까?')) {
       logout();
       navigate('/');
+      setIsMenuOpen(false); // 로그아웃 시 메뉴 닫기
     }
   };
 
-  // ✅ 현재 경로와 링크 경로가 일치하는지 확인하여 클래스 반환
   const getLinkClass = (path) => {
-    // 정확히 일치하거나, 해당 경로로 시작하는 경우 (하위 페이지 포함) 활성화
     const isActive =
       location.pathname === path ||
       (path !== '/' && location.pathname.startsWith(path));
 
     return isActive
-      ? 'text-purple-400 font-bold transition-colors' // 활성화 시 보라색 + 굵게
-      : 'text-slate-300 hover:text-white transition-colors'; // 비활성화 시 기본색
+      ? 'text-purple-400 font-bold transition-colors'
+      : 'text-slate-300 hover:text-white transition-colors';
   };
 
-  // ✅ 모바일용 링크 스타일 함수
-  const getMobileLinkClass = (path) => {
+  // ✅ 모바일 메뉴 아이템 스타일 (터치 영역 확보 및 시각적 피드백)
+  const mobileMenuItemClass = (path) => {
     const isActive =
       location.pathname === path ||
       (path !== '/' && location.pathname.startsWith(path));
-    return isActive
-      ? 'text-purple-400 font-bold'
-      : 'text-slate-300 hover:text-white';
+
+    return `block px-4 py-3 rounded-xl transition-all ${
+      isActive
+        ? 'bg-purple-500/10 text-purple-400 font-bold'
+        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+    }`;
   };
 
   return (
@@ -59,6 +61,7 @@ const Navbar = () => {
         <Link
           to={isLoggedIn ? '/dashboard' : '/'}
           className="flex items-center gap-2 group cursor-pointer"
+          onClick={() => setIsMenuOpen(false)}
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-purple-500/50 transition-all">
             Q
@@ -106,7 +109,7 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* 3. CTA Button & User Profile */}
+        {/* 3. Desktop CTA & User Profile */}
         <div className="hidden md:flex items-center gap-4">
           {isLoggedIn ? (
             <>
@@ -146,95 +149,121 @@ const Navbar = () => {
 
         {/* 4. Mobile Menu Button */}
         <button
-          className="md:hidden text-white"
+          className="md:hidden text-white p-1"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* 5. Mobile Menu Dropdown */}
+      {/* 5. Mobile Menu Dropdown (Refactored) */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-slate-900 border-b border-white/10 p-4 flex flex-col gap-4 shadow-xl">
-          {isLoggedIn ? (
-            <>
-              <div className="flex items-center gap-2 pb-2 border-b border-white/10 mb-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white">
-                  {user?.nickname ? user.nickname[0] : 'U'}
+        <div className="md:hidden absolute top-full left-0 w-full bg-slate-900 border-b border-white/10 shadow-2xl flex flex-col">
+          {/* A. Menu Content Area */}
+          <div className="p-5 flex flex-col gap-2">
+            {isLoggedIn ? (
+              <>
+                {/* User Profile Card */}
+                <div className="flex items-center gap-3 p-4 bg-slate-800/50 rounded-2xl border border-white/5 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-sm font-bold text-white shadow-inner">
+                    {user?.nickname ? user.nickname[0] : 'U'}
+                  </div>
+                  <div>
+                    <p className="font-bold text-white text-base">
+                      {user?.nickname}님
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      오늘도 화이팅하세요!
+                    </p>
+                  </div>
                 </div>
-                <span className="font-bold text-white">{user?.nickname}님</span>
-              </div>
-              <Link
-                to="/dashboard"
-                className={getMobileLinkClass('/dashboard')}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                대시보드
-              </Link>
-              <Link
-                to="/interview"
-                className={getMobileLinkClass('/interview')}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                모의 면접
-              </Link>
-              <Link
-                to="/note"
-                className={getMobileLinkClass('/note')}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                질문 노트
-              </Link>
-              <Link
-                to="/community"
-                className={getMobileLinkClass('/community')}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                커뮤니티
-              </Link>
+
+                {/* Nav Links */}
+                <Link
+                  to="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('/dashboard')}
+                >
+                  대시보드
+                </Link>
+                <Link
+                  to="/interview"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('/interview')}
+                >
+                  모의 면접
+                </Link>
+                <Link
+                  to="/note"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('/note')}
+                >
+                  질문 노트
+                </Link>
+                <Link
+                  to="/community"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('/community')}
+                >
+                  커뮤니티
+                </Link>
+              </>
+            ) : (
+              <>
+                <a
+                  href="#features"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('#features')}
+                >
+                  기능 소개
+                </a>
+                <a
+                  href="#how-it-works"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('#how-it-works')}
+                >
+                  이용 방법
+                </a>
+                <Link
+                  to="/community"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={mobileMenuItemClass('/community')}
+                >
+                  커뮤니티
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* B. Bottom Action Area (Separator + 50:50 Buttons) */}
+          <div className="p-4 border-t border-white/10 bg-slate-900/50">
+            {isLoggedIn ? (
               <button
-                onClick={() => {
-                  handleLogout();
-                  setIsMenuOpen(false);
-                }}
-                className="text-red-400 text-left font-bold pt-2"
+                onClick={handleLogout}
+                className="w-full bg-slate-800 text-red-400 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
               >
-                로그아웃
+                <LogOut size={16} /> 로그아웃
               </button>
-            </>
-          ) : (
-            <>
-              <a
-                href="#features"
-                className="text-slate-300 hover:text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                기능 소개
-              </a>
-              <Link
-                to="/community"
-                className={getMobileLinkClass('/community')}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                커뮤니티
-              </Link>
-              <div className="h-px bg-white/10 my-2"></div>
-              <Link
-                to="/auth/login"
-                className="text-slate-300 hover:text-white text-left"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                로그인
-              </Link>
-              <Link
-                to="/auth/signup"
-                className="bg-white text-slate-950 px-5 py-3 rounded-xl font-bold text-sm text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                무료로 시작하기
-              </Link>
-            </>
-          )}
+            ) : (
+              <div className="flex items-center gap-3">
+                {/* 50:50 배치: flex-1 사용 */}
+                <Link
+                  to="/auth/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex-1 bg-slate-800 text-slate-200 py-3.5 rounded-xl font-bold text-sm text-center hover:bg-slate-700 transition-colors"
+                >
+                  로그인
+                </Link>
+                <Link
+                  to="/auth/signup"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex-1 bg-white text-slate-900 py-3.5 rounded-xl font-bold text-sm text-center hover:bg-slate-100 transition-colors"
+                >
+                  회원가입
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </nav>
