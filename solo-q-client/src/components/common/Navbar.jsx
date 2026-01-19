@@ -64,10 +64,10 @@ const Navbar = () => {
           onClick={() => setIsMenuOpen(false)}
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-purple-500/50 transition-all">
-            Q
+            H
           </div>
           <span className="font-bold text-2xl tracking-tight text-white">
-            Solo<span className="text-purple-400">-Q</span>
+            Hitori<span className="text-purple-400">demo</span>
           </span>
         </Link>
 
@@ -79,10 +79,10 @@ const Navbar = () => {
                 대시보드
               </Link>
               <Link to="/interview" className={getLinkClass('/interview')}>
-                모의 면접
+                모의면접
               </Link>
               <Link to="/note" className={getLinkClass('/note')}>
-                질문 노트
+                질문노트
               </Link>
               <Link to="/community" className={getLinkClass('/community')}>
                 커뮤니티
@@ -94,13 +94,13 @@ const Navbar = () => {
                 href="#features"
                 className="text-slate-300 hover:text-white transition-colors"
               >
-                기능 소개
+                기능소개
               </a>
               <a
                 href="#how-it-works"
                 className="text-slate-300 hover:text-white transition-colors"
               >
-                이용 방법
+                이용방법
               </a>
               <Link to="/community" className={getLinkClass('/community')}>
                 커뮤니티
@@ -191,14 +191,14 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={mobileMenuItemClass('/interview')}
                 >
-                  모의 면접
+                  모의면접
                 </Link>
                 <Link
                   to="/note"
                   onClick={() => setIsMenuOpen(false)}
                   className={mobileMenuItemClass('/note')}
                 >
-                  질문 노트
+                  질문노트
                 </Link>
                 <Link
                   to="/community"
@@ -215,14 +215,14 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={mobileMenuItemClass('#features')}
                 >
-                  기능 소개
+                  기능소개
                 </a>
                 <a
                   href="#how-it-works"
                   onClick={() => setIsMenuOpen(false)}
                   className={mobileMenuItemClass('#how-it-works')}
                 >
-                  이용 방법
+                  이용방법
                 </a>
                 <Link
                   to="/community"

@@ -34,7 +34,7 @@ const LandingPage = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm text-secondary text-sm font-semibold mb-8"
           >
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-            AI 기반 면접 파트너, 솔로큐 런칭!
+            AI 기반 면접 파트너, 히토리데모 런칭!
           </motion.div>
 
           <motion.h1

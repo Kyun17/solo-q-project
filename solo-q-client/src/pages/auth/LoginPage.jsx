@@ -60,10 +60,10 @@ const LoginPage = () => {
           className="flex items-center gap-3 mb-10 group cursor-pointer"
         >
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 flex items-center justify-center font-bold text-3xl shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-300">
-            Q
+            H
           </div>
           <span className="font-bold text-4xl tracking-tight drop-shadow-lg">
-            Solo<span className="text-purple-400">-Q</span>
+            Hitori<span className="text-purple-400">demo</span>
           </span>
         </Link>
 
