@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import {
   ArrowLeft,
   Mail,
@@ -49,7 +49,7 @@ const SignupPage = () => {
 
       // 3. API 호출 + 최소 로딩 시간(0.8초) 보장 (로그인 페이지와 UX 통일)
       const [response] = await Promise.all([
-        axios.post('http://168.107.57.201:8080/api/auth/signup', requestBody),
+        axiosInstance.post('auth/signup', requestBody),
         new Promise((resolve) => setTimeout(resolve, 800)),
       ]);
 

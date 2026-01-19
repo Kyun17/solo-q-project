@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosInstance';
 import useAuthStore from '../../store/useAuthStore';
 import { ArrowLeft, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'; // Loader2 아이콘 추가
 
@@ -26,7 +26,7 @@ const LoginPage = () => {
       // API가 아무리 빨라도 이 시간만큼은 로딩 애니메이션을 보여줍니다.
       // Promise.all을 사용하여 "API 요청"과 "0.8초 타이머" 중 더 늦게 끝나는 것을 기다립니다.
       const [response] = await Promise.all([
-        axios.post('http://168.107.57.201:8080/api/auth/login', formData),
+        axiosInstance.post('/auth/login', formData),
         new Promise((resolve) => setTimeout(resolve, 800)), // 0.8초 대기 (숫자를 조절하여 시간 변경 가능)
       ]);
 
