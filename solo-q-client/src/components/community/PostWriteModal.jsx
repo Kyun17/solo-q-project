@@ -6,7 +6,11 @@ import Loading from '../common/Loading';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
-import { createPost, fetchPostDetail, updatePost } from '../../api/communityApi';
+import {
+  createPost,
+  fetchPostDetail,
+  updatePost,
+} from '../../api/communityApi';
 
 /**
  * PostWriteModal
@@ -17,171 +21,193 @@ import { createPost, fetchPostDetail, updatePost } from '../../api/communityApi'
  * - onClose: () => void
  */
 function PostWriteModal({ mode = 'create', postId, onClose }) {
-    const isEdit = mode === 'edit';
-    const queryClient = useQueryClient();
+  const isEdit = mode === 'edit';
+  const queryClient = useQueryClient();
 
-    // 폼 상태
-    const [title, setTitle] = useState('');
-    const [boardType, setBoardType] = useState('FEEDBACK');
-    const [content, setContent] = useState('');
+  // 폼 상태
+  const [title, setTitle] = useState('');
+  const [boardType, setBoardType] = useState('FEEDBACK');
+  const [content, setContent] = useState('');
 
-    // 수정 모드일 때 기존 글 조회
-    const { data: post, isLoading, isError } = useQuery({
-        queryKey: ['post', postId],
-        queryFn: () => fetchPostDetail(postId),
-        enabled: isEdit && Number.isFinite(postId),
-    });
+  // 수정 모드일 때 기존 글 조회
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => fetchPostDetail(postId),
+    enabled: isEdit && Number.isFinite(postId),
+  });
 
-    // 기존 데이터 세팅
-    useEffect(() => {
-        if (isEdit && post) {
-            setTitle(post.title ?? '');
-            setBoardType(post.boardType);
-            setContent(post.content ?? '');
-        }
-    }, [isEdit, post]);
+  // 기존 데이터 세팅
+  useEffect(() => {
+    if (isEdit && post) {
+      setTitle(post.title ?? '');
+      setBoardType(post.boardType);
+      setContent(post.content ?? '');
+    }
+  }, [isEdit, post]);
 
-    // 작성
-    const createMutation = useMutation({
-        mutationFn: createPost,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['posts'] });
-            onClose();
-        },
-        onError: () => {
-            alert('게시글 등록에 실패했습니다.');
-        },
-    });
+  // 작성
+  const createMutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      onClose();
+    },
+    onError: () => {
+      alert('게시글 등록에 실패했습니다.');
+    },
+  });
 
-    // 수정
-    const updateMutation = useMutation({
-        mutationFn: (payload) => updatePost(postId, payload),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['posts'] });
-            queryClient.invalidateQueries({ queryKey: ['post', postId] });
-            onClose();
-        },
-        onError: () => {
-            alert('게시글 수정에 실패했습니다.');
-        },
-    });
+  // 수정
+  const updateMutation = useMutation({
+    mutationFn: (payload) => updatePost(postId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['post', postId] });
+      onClose();
+    },
+    onError: () => {
+      alert('게시글 수정에 실패했습니다.');
+    },
+  });
 
-    // 제출
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
+  // 제출
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
 
-        if (!title.trim() || !content.trim()) {
-            alert('제목과 내용은 필수입니다.');
-            return;
-        }
+    if (!title.trim() || !content.trim()) {
+      alert('제목과 내용은 필수입니다.');
+      return;
+    }
 
-        const payload = {
-            title: title.trim(),
-            boardType,
-            content: content.trim(),
-        };
-
-        if (isEdit) updateMutation.mutate(payload);
-        else createMutation.mutate(payload);
+    const payload = {
+      title: title.trim(),
+      boardType,
+      content: content.trim(),
     };
 
-    const isSubmitting = createMutation.isPending || updateMutation.isPending;
+    if (isEdit) updateMutation.mutate(payload);
+    else createMutation.mutate(payload);
+  };
 
-    // 수정 모드 로딩 처리
-    if (isEdit && isLoading) {
-        return (
-            <Modal onClose={onClose}>
-                <Loading />
-            </Modal>
-        );
-    }
+  const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
-    if (isEdit && isError) {
-        return (
-            <Modal onClose={onClose}>
-                <div className="text-red-400">게시글 정보를 불러오지 못했습니다.</div>
-                <div className="mt-4 flex justify-end">
-                    <Button onClick={onClose}>닫기</Button>
-                </div>
-            </Modal>
-        );
-    }
-
+  // 수정 모드 로딩 처리
+  if (isEdit && isLoading) {
     return (
-        <Modal onClose={onClose}>
-            <div className="max-w-xl w-full">
-                {/* 타이틀 */}
-                <h2 className="text-xl font-bold text-white mb-4">
-                    {isEdit ? '게시글 수정' : '새 글 작성'}
-                </h2>
-
-                {/* 폼 */}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* 제목 */}
-                    <div>
-                        <label className="block text-sm text-slate-300 mb-2">제목</label>
-                        <Input
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="제목을 입력하세요"
-                        />
-                    </div>
-
-                    <div className="flex gap-2 mb-4">
-                        {[
-                            { key: 'FEEDBACK', label: '피드백' },
-                            { key: 'STUDY', label: '스터디' },
-                            { key: 'FREE', label: '자유' },
-                        ].map((type) => (
-                            <button
-                                key={type.key}
-                                type="button"
-                                onClick={() => setBoardType(type.key)}
-                                className={`
-                px-3 py-1.5 rounded-full text-sm font-medium
-                ${boardType === type.key
-                                        ? 'bg-purple-600 text-white'
-                                        : 'bg-slate-800 text-slate-300'
-                                    }
-              `}
-                            >
-                                {type.label}
-                            </button>
-                        ))}
-                    </div>
-
-
-                    {/* 내용 */}
-                    <div>
-                        <label className="block text-sm text-slate-300 mb-2">내용</label>
-                        <textarea
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            rows={8}
-                            placeholder="내용을 입력하세요"
-                            className="
-                w-full rounded-lg p-3 text-sm
-                bg-white/5 border border-white/10
-                text-white placeholder-slate-400
-                focus:outline-none focus:border-purple-500
-              "
-                        />
-                    </div>
-
-                    {/* 버튼 */}
-                    <div className="flex justify-end gap-2 pt-2">
-                        <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
-                            취소
-                        </Button>
-
-                        <Button type="submit" disabled={isSubmitting}>
-                            {isEdit ? '수정' : '등록'}
-                        </Button>
-                    </div>
-                </form>
-            </div>
-        </Modal>
+      <Modal onClose={onClose}>
+        <Loading />
+      </Modal>
     );
+  }
+
+  if (isEdit && isError) {
+    return (
+      <Modal onClose={onClose}>
+        <div className="text-red-400">게시글 정보를 불러오지 못했습니다.</div>
+        <div className="mt-4 flex justify-end">
+          <Button onClick={onClose}>닫기</Button>
+        </div>
+      </Modal>
+    );
+  }
+
+  return (
+    <Modal onClose={onClose}>
+      <div className="w-full max-w-xl">
+        {/* 타이틀 */}
+        <h2 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
+          {isEdit ? '게시글 수정' : '새 글 작성'}
+        </h2>
+
+        {/* 폼 */}
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
+          {/* 제목 */}
+          <div>
+            <label className="block text-xs md:text-sm text-slate-300 mb-1.5 md:mb-2 font-medium">
+              제목
+            </label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="제목을 입력하세요"
+            />
+          </div>
+
+          {/* 카테고리 선택 (모바일: 꽉 찬 버튼, 데스크탑: 일반 버튼) */}
+          <div>
+            <label className="block text-xs md:text-sm text-slate-300 mb-1.5 md:mb-2 font-medium">
+              카테고리
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { key: 'FEEDBACK', label: '피드백' },
+                { key: 'STUDY', label: '스터디' },
+                { key: 'FREE', label: '자유' },
+              ].map((type) => (
+                <button
+                  key={type.key}
+                  type="button"
+                  onClick={() => setBoardType(type.key)}
+                  className={`
+                                        flex-1 md:flex-none py-2.5 px-3 md:py-2 md:px-4 rounded-lg text-sm font-medium transition-colors
+                                        border border-transparent
+                                        ${
+                                          boardType === type.key
+                                            ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50'
+                                            : 'bg-slate-800 text-slate-400 border-slate-700/50 hover:bg-slate-700'
+                                        }
+                                    `}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 내용 */}
+          <div>
+            <label className="block text-xs md:text-sm text-slate-300 mb-1.5 md:mb-2 font-medium">
+              내용
+            </label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="내용을 입력하세요"
+              className="
+                                w-full rounded-xl p-3 md:p-4 text-sm
+                                bg-slate-800/50 border border-white/10
+                                text-white placeholder-slate-500
+                                focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500
+                                resize-none
+                                h-40 md:h-64
+                                scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent
+                            "
+            />
+          </div>
+
+          {/* 버튼 */}
+          <div className="flex justify-end gap-3 pt-2 md:pt-4 border-t border-white/5 mt-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              취소
+            </Button>
+
+            <Button type="submit" disabled={isSubmitting}>
+              {isEdit ? '수정완료' : '등록하기'}
+            </Button>
+          </div>
+        </form>
+      </div>
+    </Modal>
+  );
 }
 
 export default PostWriteModal;
