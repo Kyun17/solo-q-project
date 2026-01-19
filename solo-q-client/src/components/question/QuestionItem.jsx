@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Trash2 } from 'lucide-react'; // 삭제 아이콘을 위해 추가 (없으면 텍스트로 대체 가능)
 
 function CategoryBadge({ category }) {
   const style = useMemo(() => {
@@ -29,35 +30,36 @@ export default function QuestionItem({ item, onEdit, onDelete }) {
   const [expanded, setExpanded] = useState(false);
 
   const answer = item.answer || '';
-  const shortAnswer = answer.length > 50 ? answer.slice(0, 50) + '…' : answer; // 모바일 2열이라 글자수 제한 줄임
+  const shortAnswer = answer.length > 50 ? answer.slice(0, 50) + '…' : answer;
 
   return (
     <div
-      className="flex flex-col h-full rounded-2xl md:rounded-3xl border border-white/10 bg-white/5 p-4 md:p-6 backdrop-blur-xl
+      onClick={() => onEdit(item)} // ✅ 카드 전체 클릭 시 수정 모달 열기
+      className="relative flex flex-col h-full rounded-2xl md:rounded-3xl border border-white/10 bg-white/5 p-4 md:p-6 backdrop-blur-xl
                  shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset]
-                 hover:bg-white/[0.07] transition group"
+                 hover:bg-white/[0.07] hover:border-white/20 transition group cursor-pointer"
     >
       {/* Top Row */}
       <div className="flex items-start justify-between gap-2 mb-3 md:mb-4">
         <CategoryBadge category={item.category || '기타'} />
 
-        {/* 모바일에서는 항상 보이거나 버튼을 작게 처리 */}
-        <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={() => onEdit(item)}
-            className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[10px] md:text-xs font-medium text-zinc-300
-                       hover:bg-white/10 hover:text-white transition"
-          >
-            수정
-          </button>
-          <button
-            onClick={() => onDelete(item.questionId)}
-            className="rounded border border-white/10 bg-white/5 px-2 py-1 text-[10px] md:text-xs font-medium text-zinc-300
-                       hover:bg-rose-500/20 hover:text-rose-400 transition"
-          >
-            삭제
-          </button>
-        </div>
+        {/* 삭제 버튼: 클릭 시 카드 클릭 이벤트(수정)가 발생하지 않도록 stopPropagation 사용 */}
+        {/* 모바일: 항상 보임 / 데스크탑: 호버 시 보임 */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // ⛔ 중요: 부모 클릭 이벤트 방지
+            onDelete(item.questionId);
+          }}
+          className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity
+                     rounded-lg border border-white/10 bg-white/5 p-1.5 md:px-2.5 md:py-1.5 
+                     text-[10px] md:text-xs font-medium text-zinc-400
+                     hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 active:scale-95"
+          title="삭제"
+        >
+          {/* 텍스트 대신 아이콘을 쓰거나, 그냥 '삭제' 텍스트 유지 */}
+          <span className="md:hidden">🗑️</span>
+          <span className="hidden md:inline">삭제</span>
+        </button>
       </div>
 
       {/* Question */}
@@ -78,8 +80,11 @@ export default function QuestionItem({ item, onEdit, onDelete }) {
 
             {answer.length > 50 ? (
               <button
-                onClick={() => setExpanded((v) => !v)}
-                className="mt-2 inline-flex items-center gap-1 text-[10px] md:text-xs font-semibold text-zinc-400 hover:text-white transition"
+                onClick={(e) => {
+                  e.stopPropagation(); // ⛔ 더보기 누를 때 수정 모달 뜨지 않게 방지
+                  setExpanded((v) => !v);
+                }}
+                className="mt-2 inline-flex items-center gap-1 text-[10px] md:text-xs font-semibold text-zinc-400 hover:text-white transition p-1 -ml-1 rounded hover:bg-white/5"
               >
                 {expanded ? '접기' : '더 보기'}
               </button>
@@ -93,7 +98,7 @@ export default function QuestionItem({ item, onEdit, onDelete }) {
         )}
       </div>
 
-      {/* Footer (date) - 모바일에서 공간 부족하면 숨김 */}
+      {/* Footer (date) */}
       <div className="hidden md:block mt-5 text-xs text-zinc-600 font-medium">
         등록일 {item.createdAt ? item.createdAt : '—'}
       </div>

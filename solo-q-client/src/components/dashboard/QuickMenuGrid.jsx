@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Video,
   BookOpen,
@@ -9,31 +9,50 @@ import {
 import { Link } from 'react-router-dom';
 
 const QuickMenuGrid = ({ data }) => {
-  // 데이터가 없을 경우 기본값 0
   const questionCount = data ? data.questionCount : 0;
+
+  // 🔹 현재 스크롤 위치 상태 관리 (0, 1, 2)
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
+
+  // 🔹 스크롤 감지 핸들러
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollLeft = scrollRef.current.scrollLeft;
+      const clientWidth = scrollRef.current.clientWidth;
+      // 현재 스크롤 위치를 기반으로 활성 인덱스 계산 (반올림)
+      const newIndex = Math.round(scrollLeft / (clientWidth * 0.75));
+      setActiveIndex(newIndex);
+    }
+  };
 
   return (
     <>
-      {/* 스크롤바 숨김 스타일 (깔끔한 UI를 위해) */}
       <style>{`
-                .scrollbar-hide::-webkit-scrollbar { display: none; }
-                .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-            `}</style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
 
       <div className="max-w-7xl mx-auto px-6 mb-10">
-        {/* 모바일: flex, overflow-x-auto (가로 스크롤), snap-x (스냅 효과)
-                   데스크탑(md): grid, grid-cols-3 (기존 그리드 유지)
-                */}
-        <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide pb-4 md:pb-0">
+        {/* 🔹 컨테이너 */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 
+                     overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-hide 
+                     pb-4 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0"
+          // 👆 -mx-6 px-6: 모바일에서 스크롤 영역을 화면 끝까지 확장하면서 패딩 유지
+        >
           {/* Card 1: Interview */}
           <Link
             to="/interview"
             className="
-                            flex-shrink-0 w-[85vw] md:w-auto snap-center 
-                            block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
-                            hover:bg-slate-800/60 hover:border-purple-500/30 hover:-translate-y-1 transition-all 
-                            group relative overflow-hidden h-64 flex flex-col justify-between
-                        "
+              /* 🔹 w-[78vw]: 너비를 줄여서 다음 카드가 오른쪽에서 '빼꼼' 보이게 함 (Peekaboo 효과) */
+              flex-shrink-0 w-[78vw] md:w-auto snap-center 
+              block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
+              hover:bg-slate-800/60 hover:border-purple-500/30 hover:-translate-y-1 transition-all 
+              group relative overflow-hidden h-64 flex flex-col justify-between
+            "
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-lime-400/10 rounded-full blur-[40px] group-hover:bg-lime-400/20 transition-colors pointer-events-none"></div>
             <div>
@@ -58,11 +77,11 @@ const QuickMenuGrid = ({ data }) => {
           <Link
             to="/note"
             className="
-                            flex-shrink-0 w-[85vw] md:w-auto snap-center 
-                            block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
-                            hover:bg-slate-800/60 hover:border-cyan-500/30 hover:-translate-y-1 transition-all 
-                            group relative overflow-hidden h-64 flex flex-col justify-between
-                        "
+              flex-shrink-0 w-[78vw] md:w-auto snap-center 
+              block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
+              hover:bg-slate-800/60 hover:border-cyan-500/30 hover:-translate-y-1 transition-all 
+              group relative overflow-hidden h-64 flex flex-col justify-between
+            "
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/10 rounded-full blur-[40px] group-hover:bg-cyan-400/20 transition-colors pointer-events-none"></div>
             <div>
@@ -86,11 +105,11 @@ const QuickMenuGrid = ({ data }) => {
           <Link
             to="/community"
             className="
-                            flex-shrink-0 w-[85vw] md:w-auto snap-center 
-                            block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
-                            hover:bg-slate-800/60 hover:border-pink-500/30 hover:-translate-y-1 transition-all 
-                            group relative overflow-hidden h-64 flex flex-col
-                        "
+              flex-shrink-0 w-[78vw] md:w-auto snap-center 
+              block bg-slate-800/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl 
+              hover:bg-slate-800/60 hover:border-pink-500/30 hover:-translate-y-1 transition-all 
+              group relative overflow-hidden h-64 flex flex-col
+            "
           >
             <div className="flex justify-between items-start mb-4">
               <div className="w-12 h-12 rounded-2xl bg-pink-400/20 text-pink-400 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -126,6 +145,18 @@ const QuickMenuGrid = ({ data }) => {
               </div>
             </div>
           </Link>
+        </div>
+
+        {/* 🔹 모바일 전용 페이지네이션 점 (Dots) */}
+        <div className="flex md:hidden justify-center gap-2 mt-2">
+          {[0, 1, 2].map((idx) => (
+            <div
+              key={idx}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                activeIndex === idx ? 'w-6 bg-purple-500' : 'w-1.5 bg-slate-700'
+              }`}
+            />
+          ))}
         </div>
       </div>
     </>
