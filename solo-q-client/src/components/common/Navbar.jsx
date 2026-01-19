@@ -1,151 +1,240 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { List, X, Atom, SignIn, UserPlus } from '@phosphor-icons/react';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // useLocation 추가
+import { ArrowRight, Menu, X, User, LogOut } from 'lucide-react';
+import useAuthStore from '../../store/useAuthStore';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation(); // 현재 경로 정보 가져오기
+  const { isLoggedIn, user, logout } = useAuthStore();
+
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
+  const handleLogout = () => {
+    if (confirm('정말 로그아웃 하시겠습니까?')) {
+      logout();
+      navigate('/');
+    }
+  };
+
+  // ✅ 현재 경로와 링크 경로가 일치하는지 확인하여 클래스 반환
+  const getLinkClass = (path) => {
+    // 정확히 일치하거나, 해당 경로로 시작하는 경우 (하위 페이지 포함) 활성화
+    const isActive =
+      location.pathname === path ||
+      (path !== '/' && location.pathname.startsWith(path));
+
+    return isActive
+      ? 'text-purple-400 font-bold transition-colors' // 활성화 시 보라색 + 굵게
+      : 'text-slate-300 hover:text-white transition-colors'; // 비활성화 시 기본색
+  };
+
+  // ✅ 모바일용 링크 스타일 함수
+  const getMobileLinkClass = (path) => {
+    const isActive =
+      location.pathname === path ||
+      (path !== '/' && location.pathname.startsWith(path));
+    return isActive
+      ? 'text-purple-400 font-bold'
+      : 'text-slate-300 hover:text-white';
+  };
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || isOpen
-          ? 'bg-slate-950/90 backdrop-blur-md border-b border-white/5'
-          : 'bg-transparent'
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-slate-900/90 backdrop-blur-md border-b border-white/5 py-4'
+          : 'bg-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-fuchsia-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-purple-500/20 transition-all">
-            <Atom size={24} weight="fill" />
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        {/* 1. Logo */}
+        <Link
+          to={isLoggedIn ? '/dashboard' : '/'}
+          className="flex items-center gap-2 group cursor-pointer"
+        >
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:shadow-purple-500/50 transition-all">
+            Q
           </div>
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-            Solo-Q
+          <span className="font-bold text-2xl tracking-tight text-white">
+            Solo<span className="text-purple-400">-Q</span>
           </span>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          <div className="flex items-center gap-6 text-sm font-medium text-slate-400">
-            <Link to="/note" className="hover:text-white transition-colors">
-              질문 노트
-            </Link>
-            <Link
-              to="/interview"
-              className="hover:text-white transition-colors"
-            >
-              모의 면접
-            </Link>
-            <Link
-              to="/community"
-              className="hover:text-white transition-colors"
-            >
-              커뮤니티
-            </Link>
-          </div>
-          <div className="h-5 w-px bg-slate-700"></div>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/login"
-              className="text-sm font-semibold text-white hover:text-purple-400 transition-colors"
-            >
-              로그인
-            </Link>
-            <Link
-              to="/signup"
-              className="px-5 py-2.5 bg-white text-slate-900 text-sm font-bold rounded-full hover:bg-purple-50 transition-colors shadow-lg shadow-white/10"
-            >
-              무료로 시작하기
-            </Link>
-          </div>
+        {/* 2. Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8 font-medium text-sm">
+          {isLoggedIn ? (
+            <>
+              <Link to="/dashboard" className={getLinkClass('/dashboard')}>
+                대시보드
+              </Link>
+              <Link to="/interview" className={getLinkClass('/interview')}>
+                모의 면접
+              </Link>
+              <Link to="/note" className={getLinkClass('/note')}>
+                질문 노트
+              </Link>
+              <Link to="/community" className={getLinkClass('/community')}>
+                커뮤니티
+              </Link>
+            </>
+          ) : (
+            <>
+              <a
+                href="#features"
+                className="text-slate-300 hover:text-white transition-colors"
+              >
+                기능 소개
+              </a>
+              <a
+                href="#how-it-works"
+                className="text-slate-300 hover:text-white transition-colors"
+              >
+                이용 방법
+              </a>
+              <Link to="/community" className={getLinkClass('/community')}>
+                커뮤니티
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Mobile Toggle Button */}
+        {/* 3. CTA Button & User Profile */}
+        <div className="hidden md:flex items-center gap-4">
+          {isLoggedIn ? (
+            <>
+              <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-full border border-slate-700">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white">
+                  {user?.nickname ? user.nickname[0] : 'U'}
+                </div>
+                <span className="text-sm font-medium text-white">
+                  {user?.nickname}님
+                </span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="text-slate-400 hover:text-red-400 transition-colors p-2 rounded-full hover:bg-slate-800"
+                title="로그아웃"
+              >
+                <LogOut size={20} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/auth/login"
+                className="text-slate-300 hover:text-white font-medium text-sm transition-colors"
+              >
+                로그인
+              </Link>
+              <Link
+                to="/auth/signup"
+                className="bg-white text-slate-950 px-5 py-2.5 rounded-full font-bold text-sm hover:bg-slate-200 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2"
+              >
+                무료로 시작하기 <ArrowRight size={16} strokeWidth={3} />
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* 4. Mobile Menu Button */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-slate-300 hover:text-white p-2"
+          className="md:hidden text-white"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isOpen ? <X size={28} /> : <List size={28} />}
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Menu Overlay (드롭다운 방식) */}
-      {isOpen && (
-        <div className="absolute top-20 left-0 right-0 bg-slate-950 border-b border-white/5 shadow-2xl md:hidden">
-          <div className="px-6 py-8 flex flex-col gap-6">
-            {/* Navigation Links */}
-            <div className="flex flex-col gap-2">
+      {/* 5. Mobile Menu Dropdown */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 w-full bg-slate-900 border-b border-white/10 p-4 flex flex-col gap-4 shadow-xl">
+          {isLoggedIn ? (
+            <>
+              <div className="flex items-center gap-2 pb-2 border-b border-white/10 mb-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-xs font-bold text-white">
+                  {user?.nickname ? user.nickname[0] : 'U'}
+                </div>
+                <span className="font-bold text-white">{user?.nickname}님</span>
+              </div>
               <Link
-                to="/note"
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all group"
+                to="/dashboard"
+                className={getMobileLinkClass('/dashboard')}
+                onClick={() => setIsMenuOpen(false)}
               >
-                <span className="text-base font-medium text-slate-300 group-hover:text-white">
-                  질문 노트
-                </span>
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
-                  Note
-                </span>
+                대시보드
               </Link>
               <Link
                 to="/interview"
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all group"
+                className={getMobileLinkClass('/interview')}
+                onClick={() => setIsMenuOpen(false)}
               >
-                <span className="text-base font-medium text-slate-300 group-hover:text-white">
-                  모의 면접
-                </span>
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
-                  Interview
-                </span>
+                모의 면접
+              </Link>
+              <Link
+                to="/note"
+                className={getMobileLinkClass('/note')}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                질문 노트
               </Link>
               <Link
                 to="/community"
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-all group"
+                className={getMobileLinkClass('/community')}
+                onClick={() => setIsMenuOpen(false)}
               >
-                <span className="text-base font-medium text-slate-300 group-hover:text-white">
-                  커뮤니티
-                </span>
-                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
-                  Community
-                </span>
+                커뮤니티
               </Link>
-            </div>
-
-            {/* Divider */}
-            <div className="h-px bg-slate-800"></div>
-
-            {/* Bottom Actions (깔끔한 50:50) */}
-            <div className="grid grid-cols-2 gap-3">
-              <Link
-                to="auth/login"
-                className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-700 text-slate-300 font-semibold hover:bg-slate-800 hover:text-white transition-all text-sm"
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="text-red-400 text-left font-bold pt-2"
               >
-                <SignIn size={18} />
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <a
+                href="#features"
+                className="text-slate-300 hover:text-white"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                기능 소개
+              </a>
+              <Link
+                to="/community"
+                className={getMobileLinkClass('/community')}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                커뮤니티
+              </Link>
+              <div className="h-px bg-white/10 my-2"></div>
+              <Link
+                to="/auth/login"
+                className="text-slate-300 hover:text-white text-left"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 로그인
               </Link>
-
               <Link
-                to="auth/signup"
-                className="flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-slate-950 font-bold hover:bg-slate-200 transition-all text-sm shadow-md"
+                to="/auth/signup"
+                className="bg-white text-slate-950 px-5 py-3 rounded-xl font-bold text-sm text-center"
+                onClick={() => setIsMenuOpen(false)}
               >
-                <UserPlus size={18} />
-                회원가입
+                무료로 시작하기
               </Link>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       )}
     </nav>
