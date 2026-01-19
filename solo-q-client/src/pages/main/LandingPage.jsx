@@ -115,8 +115,8 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              합격을 위한 <span className="text-purple-400">Solo-Q</span>만의
-              솔루션
+              합격을 위한 <span className="text-purple-400">HITORI demo</span>
+              만의 솔루션
             </h2>
             <p className="text-slate-400">
               면접 준비의 A to Z를 빈틈없이 채워드립니다.
@@ -173,7 +173,7 @@ const LandingPage = () => {
 
       {/* --- Footer --- */}
       <footer className="py-12 border-t border-slate-800 bg-slate-950 text-center text-slate-500 text-sm">
-        <p>© 2025 Solo-Q Project. Created for Portfolio.</p>
+        <p>© 2025 HITORIdemo Project. Created for Portfolio.</p>
       </footer>
     </div>
   );
