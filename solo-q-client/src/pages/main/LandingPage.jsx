@@ -34,7 +34,7 @@ const LandingPage = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm text-secondary text-sm font-semibold mb-8"
           >
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-            AI 기반 면접 파트너, 히토리데모 런칭!
+            AI 기반 면접 파트너, 히토리 런칭!
           </motion.div>
 
           <motion.h1
@@ -115,7 +115,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              합격을 위한 <span className="text-purple-400">HITORI demo</span>
+              합격을 위한 <span className="text-purple-400">HITORI</span>
               만의 솔루션
             </h2>
             <p className="text-slate-400">
@@ -173,7 +173,7 @@ const LandingPage = () => {
 
       {/* --- Footer --- */}
       <footer className="py-12 border-t border-slate-800 bg-slate-950 text-center text-slate-500 text-sm">
-        <p>© 2025 HITORIdemo Project. Created for Portfolio.</p>
+        <p>© 2025 HITORI Project. Created for Portfolio.</p>
       </footer>
     </div>
   );

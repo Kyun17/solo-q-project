@@ -67,7 +67,7 @@ const Navbar = () => {
             H
           </div>
           <span className="font-bold text-2xl tracking-tight text-white">
-            HITORI<span className="text-purple-400"> demo</span>
+            HITORI<span className="text-purple-400"></span>
           </span>
         </Link>
 

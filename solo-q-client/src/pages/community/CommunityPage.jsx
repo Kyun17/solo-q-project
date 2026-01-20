@@ -124,10 +124,10 @@ function CommunityPage() {
                   {type === 'ALL'
                     ? '전체'
                     : type === 'FEEDBACK'
-                    ? '피드백 요청'
-                    : type === 'STUDY'
-                    ? '스터디 모집'
-                    : '자유게시판'}
+                      ? '피드백 요청'
+                      : type === 'STUDY'
+                        ? '스터디 모집'
+                        : '자유게시판'}
                 </button>
               ))}
             </div>
@@ -195,7 +195,7 @@ function CommunityPage() {
                       {num}
                     </button>
                   );
-                }
+                },
               )}
 
               {/* ▶ 다음 */}
@@ -225,7 +225,7 @@ function CommunityPage() {
 
       {/* ✅ Footer */}
       <div className="text-center text-slate-600 text-sm py-8 border-t border-white/5 mx-6">
-        <p>© 2025 Solo-Q. All rights reserved.</p>
+        <p>© 2025 HITORI. All rights reserved.</p>
       </div>
 
       {/* 🔹 모달들 */}
