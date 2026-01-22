@@ -23,6 +23,18 @@ const InterviewActivePage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [totalElapsedTime, setTotalElapsedTime] = useState(0);
 
+  const videoConstraints = {
+    width: 1280,
+    height: 720,
+    facingMode: 'user',
+  };
+
+  const audioConstraints = {
+    echoCancellation: true, // 에코 제거
+    noiseSuppression: true, // 잡음 제거
+    autoGainControl: true, // 볼륨 자동 조절
+  };
+
   // ⚠️ 예외 처리
   useEffect(() => {
     if (questions.length === 0) {
@@ -55,15 +67,40 @@ const InterviewActivePage = () => {
     return () => clearInterval(timer);
   }, [currentQIndex, questions]);
 
-  // TTS 실행
+  // TTS 실행 (수정된 버전: 언어 자동 감지 추가)
   useEffect(() => {
     if (questions.length === 0) return;
 
     if (isTtsOn) {
       const text = questions[currentQIndex].content;
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ko-KR';
-      utterance.rate = 1.0;
+
+      // 1. 일본어 감지 정규식 (히라가나/가타카나 범위)
+      // 문장에 일본어 글자가 하나라도 포함되어 있으면 일본어로 간주
+      const isJapanese = /[\u3040-\u30ff\u31f0-\u31ff]/.test(text);
+
+      if (isJapanese) {
+        // 🇯🇵 일본어 설정
+        utterance.lang = 'ja-JP';
+        utterance.rate = 0.9; // 일본어는 한국어보다 조금 빨라 들릴 수 있어 속도를 0.9로 조정 (선택사항)
+
+        // (중요) 브라우저에서 사용 가능한 목소리 중 일본어 목소리를 찾아 강제 지정
+        // 일부 브라우저는 lang만 바꿔서는 목소리가 안 바뀌는 버그가 있습니다.
+        const voices = window.speechSynthesis.getVoices();
+        const jpVoice = voices.find(
+          (v) => v.lang.includes('ja') || v.lang.includes('JP'),
+        );
+
+        if (jpVoice) {
+          utterance.voice = jpVoice;
+        }
+      } else {
+        // 🇰🇷 한국어 설정 (기본값)
+        utterance.lang = 'ko-KR';
+        utterance.rate = 1.0;
+      }
+
+      // 기존 음성 취소 후 재생
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
     }
@@ -178,9 +215,12 @@ const InterviewActivePage = () => {
         <Webcam
           ref={webcamRef}
           audio={true}
+          muted={true}
           mirrored={true}
           className="w-full h-full object-cover"
           onUserMedia={handleUserMedia} // ✅ 웹캠 로드되면 녹화 시작
+          videoConstraints={videoConstraints}
+          audioConstraints={audioConstraints}
         />
       </div>
 
