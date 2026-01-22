@@ -82,7 +82,7 @@ const InterviewActivePage = () => {
       if (isJapanese) {
         // 🇯🇵 일본어 설정
         utterance.lang = 'ja-JP';
-        utterance.rate = 1.0; // 일본어는 한국어보다 조금 빨라 들릴 수 있어 속도를 0.9로 조정 (선택사항)
+        utterance.rate = 0.9; // 일본어는 한국어보다 조금 빨라 들릴 수 있어 속도를 0.9로 조정 (선택사항)
 
         // (중요) 브라우저에서 사용 가능한 목소리 중 일본어 목소리를 찾아 강제 지정
         // 일부 브라우저는 lang만 바꿔서는 목소리가 안 바뀌는 버그가 있습니다.
@@ -97,7 +97,7 @@ const InterviewActivePage = () => {
       } else {
         // 🇰🇷 한국어 설정 (기본값)
         utterance.lang = 'ko-KR';
-        utterance.rate = 1.1;
+        utterance.rate = 0.8;
       }
 
       // 기존 음성 취소 후 재생
