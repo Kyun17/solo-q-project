@@ -6,7 +6,7 @@ import QuestionList from '../../components/question/QuestionList';
 import QuestionFormModal from '../../components/question/QuestionFormModal';
 import Navbar from '../../components/common/Navbar';
 
-const CATEGORIES = ['ALL', '인성', '기술', 'CS', '협업', '기타'];
+const CATEGORIES = ['ALL', '인성', '기술', '기타'];
 
 export default function QuestionNotePage() {
   const [category, setCategory] = useState('ALL');
