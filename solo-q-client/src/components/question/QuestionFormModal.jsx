@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createQuestion, updateQuestion } from '../../api/questionApi';
 
-const CATEGORIES = ['인성', '기술', 'CS', '협업', '기타'];
+const CATEGORIES = ['인성', '기술', '기타'];
 
 export default function QuestionFormModal({
   open,

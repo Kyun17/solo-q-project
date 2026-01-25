@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Trash2 } from 'lucide-react'; // 삭제 아이콘을 위해 추가 (없으면 텍스트로 대체 가능)
 
 function CategoryBadge({ category }) {
   const style = useMemo(() => {
@@ -8,10 +7,6 @@ function CategoryBadge({ category }) {
         return 'bg-amber-500/15 text-amber-200 border-amber-400/20';
       case '기술':
         return 'bg-sky-500/15 text-sky-200 border-sky-400/20';
-      case 'CS':
-        return 'bg-emerald-500/15 text-emerald-200 border-emerald-400/20';
-      case '협업':
-        return 'bg-violet-500/15 text-violet-200 border-violet-400/20';
       default:
         return 'bg-white/10 text-zinc-200 border-white/15';
     }
