@@ -20,7 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:3000",
                         "http://localhost:5173",
-                        "https://solo-q-project.vercel.app") // React 개발 서버 주소
+                        "https://solo-q-project.vercel.app",
+                        "https://www.hitory.co.kr/",
+                        "https://hitory.co.kr/") // React 개발 서버 주소
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
